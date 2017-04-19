@@ -114,7 +114,7 @@ def predict():
 
 
 # возможно стоит тоже по хеш сумме проверять уже существующий
-def get_metrics(data, algorithm, project):
+def get_metrics_plots_from_alg(data, algorithm, project):
     X, Y = read_data(data, project)
 
     hash_md5 = get_hash_by_data_alg(data, algorithm, project)
@@ -127,30 +127,53 @@ def get_metrics(data, algorithm, project):
     else:
         path_to_alg = ml_path + str(project.id) + "/algorithms/" + algorithm.filename
 
+    print (path_to_alg)
+
     alg = import_alg(path_to_alg)
 
-    metrics = alg.test(model, X_test, y_test)
+    metrics, plots = alg.test(model, X_test, y_test)
 
-    return metrics
+    path_to_plots = ml_path + str(project.id) + "/results/images/"
+
+    plots_res = {}
+
+    for i in plots:
+        #plots[i].savefig(path_to_plots + i + ".png")
+        plots_res[i] = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/ml_data/1/results/images/roc_auc.png "#path_to_plots + i + ".png"
+
+        plots_res[i] = plots_res[i].replace("/", ":")
+
+        plots_res[i] = "/imageplot" + "/" + plots_res[i]
+
+        print (plots_res[i])
+
+    return metrics, plots_res
 
 
 def start_processing_func(project, result_type, data, algorithm, analys_classif):
     type = result_type.name
 
-    metrics = {}
+    metrics1 = {}
+    metrics2 = {}
+
+    plots1 = {}
+    plots2 = {}
 
     if type == "train_save_metrics_graphics":
         train_and_save_model(data, algorithm, project)
 
         # метрики или свои на выбор или заранее заданные
-        metrics = get_metrics(data, algorithm, project)
+        metrics1, plots1 = get_metrics_plots_from_alg(data, algorithm, project)
+        #metrics2 = get_metrics_predetermined(data, algorithm, project)
 
     data = {}
     data['type'] = 'train_save_metrics_graphics'
 
-    data['metrics'] = metrics
+    data['metrics'] = metrics1
+    data['metrics'].update(metrics2)
 
-    data['img'] = []
+    data['img'] = plots1
+    data['img'].update(plots2)
 
     res_json = json.dumps(data)
 

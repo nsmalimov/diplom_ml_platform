@@ -151,7 +151,10 @@
                     </div>
                     <div class="row voffset">
                         <p>Графики</p>
-                        <p>[[ctrl.img]]</p>
+                        <div ng-repeat="(key, value) in img">
+                            <p>[[key]]</p>
+                            <img ng-src="[[value]]" class="img-responsive">
+                        </div>
                     </div>
                 </div>
             </div>

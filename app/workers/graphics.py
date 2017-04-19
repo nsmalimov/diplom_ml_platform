@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
 from sklearn import svm, datasets
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_curve, auc
 from sklearn.model_selection import train_test_split
 from sklearn.multiclass import OneVsRestClassifier
@@ -10,8 +8,6 @@ from sklearn.preprocessing import label_binarize
 
 
 def get_graphic_roc_auc():
-
-    print ("START IMAGE")
     # Import some data to play with
     iris = datasets.load_iris()
     X = iris.data
@@ -60,28 +56,4 @@ def get_graphic_roc_auc():
     plt.ylabel('True Positive Rate')
     plt.title('Receiver operating characteristic example')
     plt.legend(loc="lower right")
-    #plt.show()
-
-    return plt
-
-def train(X, Y):
-    lr = LogisticRegression()
-    lr.fit(X, Y)
-
-    return lr
-
-
-def test(model, X, Y):
-    metrics = {}
-    metrics['mean accuracy'] = model.score(X, Y)
-
-    plots = {}
-    plots['roc_auc'] = None #get_graphic_roc_auc()
-
-    return metrics, plots
-
-
-def classify(model, features_arr):
-    res_arr_class = [model.predict(i) for i in features_arr]
-    res_arr_proba = [model.predict(i) for i in features_arr]
-    return res_arr_class, res_arr_proba
+    plt.show()

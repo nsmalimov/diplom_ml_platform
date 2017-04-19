@@ -16,10 +16,11 @@ def get_main_project_dir():
     return result
 
 
-project_name = "diplom_ml_platform_2"
+project_name = "diplom_ml_platform"
 main_project_dir = get_main_project_dir()
 
 ml_path = get_main_project_dir() + "ml_data/"
+ml_path = ml_path.replace("/app/util", "")
 
 
 def create_project_files(project_name):
