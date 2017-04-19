@@ -1,0 +1,21 @@
+http://www.jasny.net/bootstrap/examples/navmenu-reveal/ - menu button
+
+http://plugins.krajee.com/file-basic-usage-demo - upload file
+
+http://stackoverflow.com/questions/25375179/one-to-many-flask-sqlalchemy
+
+http://flask.pocoo.org/docs/0.10/deploying/wsgi-standalone/
+
+sqlite3 app_sqlite
+
+CREATE TABLE COMPANY(
+   ID INT PRIMARY KEY     NOT NULL,
+   NAME           TEXT    NOT NULL,
+   AGE            INT     NOT NULL,
+   ADDRESS        CHAR(50),
+   SALARY         REAL
+);
+
+.exit
+
+https://github.com/UseFedora/ng-pageslide
