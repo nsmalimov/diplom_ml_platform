@@ -93,6 +93,8 @@ def train_and_save_model(data, algorithm, project):
     if not (check_model_exist(hash_md5, project)):
         X, Y = read_data(data, project)
         model = train_model(algorithm, X, Y, project)
+
+        print(model)
         save_model(model, project, hash_md5)
         print("train and save")
     else:
@@ -127,8 +129,6 @@ def get_metrics_plots_from_alg(data, algorithm, project):
     else:
         path_to_alg = ml_path + str(project.id) + "/algorithms/" + algorithm.filename
 
-    print (path_to_alg)
-
     alg = import_alg(path_to_alg)
 
     metrics, plots = alg.test(model, X_test, y_test)
@@ -138,14 +138,13 @@ def get_metrics_plots_from_alg(data, algorithm, project):
     plots_res = {}
 
     for i in plots:
-        #plots[i].savefig(path_to_plots + i + ".png")
-        plots_res[i] = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/ml_data/1/results/images/roc_auc.png "#path_to_plots + i + ".png"
+        # plots[i].savefig(path_to_plots + i + ".png")
+        plots_res[
+            i] = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/ml_data/1/results/images/roc_auc.png "  # path_to_plots + i + ".png"
 
         plots_res[i] = plots_res[i].replace("/", ":")
 
         plots_res[i] = "/imageplot" + "/" + plots_res[i]
-
-        print (plots_res[i])
 
     return metrics, plots_res
 
@@ -164,7 +163,7 @@ def start_processing_func(project, result_type, data, algorithm, analys_classif)
 
         # метрики или свои на выбор или заранее заданные
         metrics1, plots1 = get_metrics_plots_from_alg(data, algorithm, project)
-        #metrics2 = get_metrics_predetermined(data, algorithm, project)
+        # metrics2 = get_metrics_predetermined(data, algorithm, project)
 
     data = {}
     data['type'] = 'train_save_metrics_graphics'

@@ -9,9 +9,7 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.preprocessing import label_binarize
 
 
-def get_graphic_roc_auc():
-
-    print ("START IMAGE")
+def get_graphic_roc_auc(X, y, model):
     # Import some data to play with
     iris = datasets.load_iris()
     X = iris.data
@@ -47,8 +45,6 @@ def get_graphic_roc_auc():
     fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
     roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
 
-    # Plot of a ROC curve for a specific class
-
     plt.figure()
     lw = 2
     plt.plot(fpr[2], tpr[2], color='darkorange',
@@ -60,7 +56,7 @@ def get_graphic_roc_auc():
     plt.ylabel('True Positive Rate')
     plt.title('Receiver operating characteristic example')
     plt.legend(loc="lower right")
-    #plt.show()
+    plt.show()
 
     return plt
 
@@ -76,7 +72,7 @@ def test(model, X, Y):
     metrics['mean accuracy'] = model.score(X, Y)
 
     plots = {}
-    plots['roc_auc'] = None #get_graphic_roc_auc()
+    plots['roc_auc'] = get_graphic_roc_auc(X, Y, model)
 
     return metrics, plots
 

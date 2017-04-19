@@ -72,10 +72,12 @@ def local_photo(image_name):
     filename = app.config['IMAGES_FOLDER'] + "/" + image_name
     return send_file(filename, mimetype='image/gif')
 
+
 @app.route('/imageplot/<string:path_to_plot_model>')
 def plot_model_func(path_to_plot_model):
     path_to_plot_model = path_to_plot_model.replace(":", "/")
     return send_file(path_to_plot_model, mimetype='image/gif')
+
 
 @app.route('/object/<project_id>/<object_type>/<string:file_name>')
 def get_object(project_id, object_type, file_name):
