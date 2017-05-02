@@ -43,6 +43,8 @@ Modelling and analysis technology for classification systems based on machine le
 
 pickle new class
 
-отмена выбранных значений
+отмена выбранных значений (в классификации)
 
-обученные модели создаются заново
+обученные модели создаются заново +
+
+почему точность 1?

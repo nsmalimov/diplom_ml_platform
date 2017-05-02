@@ -1,7 +1,7 @@
 # print(__doc__)
 #
 # import numpy as np
-# import matplotlib.pyplot as plt
+# from app.util.plot import plt
 # from sklearn.naive_bayes import GaussianNB
 # from sklearn.svm import SVC
 # from sklearn.datasets import load_digits
@@ -26,10 +26,10 @@
 #     plt.grid()
 #
 #     plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
-#                      train_scores_mean + train_scores_std, alpha=0.1,
+#                      train_scores_mean + train_scores_std, alpha=0.01,
 #                      color="r")
 #     plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
-#                      test_scores_mean + test_scores_std, alpha=0.1, color="g")
+#                      test_scores_mean + test_scores_std, alpha=0.01, color="g")
 #     plt.plot(train_sizes, train_scores_mean, 'o-', color="r",
 #              label="Training score")
 #     plt.plot(train_sizes, test_scores_mean, 'o-', color="g",
@@ -46,17 +46,30 @@
 # title = "Learning Curves (Naive Bayes)"
 # # Cross validation with 100 iterations to get smoother mean test and train
 # # score curves, each time with 20% data randomly selected as a validation set.
-# cv = ShuffleSplit(n_splits=100, test_size=0.2, random_state=0)
+# cv = ShuffleSplit(n_splits=100, test_size=0.02, random_state=0)
 #
 # estimator = GaussianNB()
-# plot_learning_curve(estimator, title, X, y, ylim=(0.7, 1.01), cv=cv, n_jobs=4)
+# plot_learning_curve(estimator, title, X, y, ylim=(0.07, 1.01), cv=cv, n_jobs=4)
 #
 # # title = "Learning Curves (SVM, RBF kernel, $\gamma=0.001$)"
 # # # SVC is more expensive so we do a lower number of CV iterations:
-# # cv = ShuffleSplit(n_splits=10, test_size=0.2, random_state=0)
+# # cv = ShuffleSplit(n_splits=10, test_size=0.02, random_state=0)
 # # estimator = SVC(gamma=0.001)
-# # plot_learning_curve(estimator, title, X, y, (0.7, 1.01), cv=cv, n_jobs=4)
+# # plot_learning_curve(estimator, title, X, y, (0.07, 1.01), cv=cv, n_jobs=4)
 #
 # plt.show()
+from sklearn.metrics.classification import f1_score, recall_score
 
-import matplotlib.pyplot as plt
+from app.util.plot import plt
+
+from sklearn.metrics import precision_score
+
+s1 = [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+s2 = [ 0.0,  0.0,  0.0,  0.0,  0.0,  1.0,  1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1.0,  0.0,
+  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1.0,  0.0,
+  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+  0.0,  0.0,  0.0]
+
+print (precision_score(s2, s1))
+
+print (recall_score(s2, s1))

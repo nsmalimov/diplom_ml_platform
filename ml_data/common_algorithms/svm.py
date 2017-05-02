@@ -12,8 +12,7 @@ def test(model, X, Y):
     metrics = {}
     metrics['mean accuracy'] = model.score(X, Y)
 
-    plots = {}
-    plots['learning curves'] = None
+    plots = None
 
     return metrics, plots
 

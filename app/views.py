@@ -75,9 +75,7 @@ def local_photo(image_name):
 
 @app.route('/imageplot/<string:path_to_plot_model>')
 def plot_model_func(path_to_plot_model):
-    print ("1 " + path_to_plot_model)
     path_to_plot_model = "/" + path_to_plot_model.replace(":", "/")
-    print ("2 " + path_to_plot_model)
     return send_file(path_to_plot_model, mimetype='image/gif')
 
 

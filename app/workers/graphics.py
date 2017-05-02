@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+from app.util.plot import plt
 import numpy as np
 from sklearn import svm, datasets
 from sklearn.metrics import roc_curve, auc

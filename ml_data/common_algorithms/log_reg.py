@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+from app.util.plot import plt
 import numpy as np
 from sklearn.linear_model.logistic import LogisticRegression
 

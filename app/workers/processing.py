@@ -4,7 +4,7 @@ import json
 import os
 import pickle
 
-import matplotlib.pyplot as plt
+#from app.util.plot import plt
 from sklearn.model_selection import train_test_split
 
 from app.util.funcs import ml_path
@@ -50,7 +50,9 @@ def train_model(algorithm, X, Y, project):
 
     alg = import_alg(path_to_alg)
 
-    model = alg.train(X, Y)
+    X_train, _, Y_train, _ = train_test_split(X, Y, test_size=0.33, random_state=42)
+
+    model = alg.train(X_train, Y_train)
 
     return model
 
@@ -69,40 +71,41 @@ def get_hash_by_data_alg(data, algorithm, project):
     data_from_file = f.read()
     f.close()
 
-    all = algorithm_code + data_from_file
+    #all = algorithm_code + data_from_file
 
-    hash_md5 = hashlib.md5(all.encode('utf-8')).hexdigest()[:32]
+    mult_char = len(algorithm_code) * len(data_from_file)
 
-    return hash_md5
+    return str(mult_char)
 
 
-def check_model_exist(hash_md5, project):
-    path_model = ml_path + str(project.id) + "/models/" + hash_md5
+def check_model_exist(hash, project):
+    path_model = ml_path + str(project.id) + "/models/" + hash
     return os.path.isfile(path_model)
 
 
-def save_model(model, project, hash_md5):
-    path_model = ml_path + str(project.id) + "/models/" + hash_md5
+def save_model(model, project, hash):
+    path_model = ml_path + str(project.id) + "/models/" + hash
     f = open(path_model, "wb")
     pickle.dump(model, f)
     f.close()
 
 
 def train_and_save_model(data, algorithm, project):
-    hash_md5 = get_hash_by_data_alg(data, algorithm, project)
+    hash = get_hash_by_data_alg(data, algorithm, project)
 
-    if not (check_model_exist(hash_md5, project)):
+    print (hash)
+    if not (check_model_exist(hash, project)):
         X, Y = read_data(data, project)
         model = train_model(algorithm, X, Y, project)
 
-        save_model(model, project, hash_md5)
+        save_model(model, project, hash)
         print("train and save")
     else:
         print("model already exist")
 
 
-def read_model(project, hash_md5):
-    path_model = ml_path + str(project.id) + "/models/" + hash_md5
+def read_model(project, hash):
+    path_model = ml_path + str(project.id) + "/models/" + hash
 
     f = open(path_model, "rb")
     model = pickle.load(f)
@@ -119,8 +122,8 @@ def predict():
 def get_metrics_plots_from_alg(data, algorithm, project):
     X, Y = read_data(data, project)
 
-    hash_md5 = get_hash_by_data_alg(data, algorithm, project)
-    model = read_model(project, hash_md5)
+    hash = get_hash_by_data_alg(data, algorithm, project)
+    model = read_model(project, hash)
 
     _, X_test, _, y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
@@ -140,17 +143,19 @@ def get_metrics_plots_from_alg(data, algorithm, project):
     # TODO как закрыть plt
     # проверить как работает на сервере
 
+    # какой-то график точно будет
+    if plots is None:
+        return metrics, plots_res
+
     for i in plots:
         path = path_to_plots + i + ".png"
         path = path.replace(" ", "_")
         plots[i].savefig(path)
-        plt.close("all")
+        #plt.close("all")
 
         plots_res[i] = path.replace("/", ":")
 
         plots_res[i] = "/imageplot/" + plots_res[i][1:]
-
-        print (plots_res[i])
 
     return metrics, plots_res
 
