@@ -4,6 +4,7 @@ import json
 import os
 import pickle
 
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
 from app.util.funcs import ml_path
@@ -94,7 +95,6 @@ def train_and_save_model(data, algorithm, project):
         X, Y = read_data(data, project)
         model = train_model(algorithm, X, Y, project)
 
-        print(model)
         save_model(model, project, hash_md5)
         print("train and save")
     else:
@@ -137,14 +137,20 @@ def get_metrics_plots_from_alg(data, algorithm, project):
 
     plots_res = {}
 
+    # TODO как закрыть plt
+    # проверить как работает на сервере
+
     for i in plots:
-        # plots[i].savefig(path_to_plots + i + ".png")
-        plots_res[
-            i] = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/ml_data/1/results/images/roc_auc.png "  # path_to_plots + i + ".png"
+        path = path_to_plots + i + ".png"
+        path = path.replace(" ", "_")
+        plots[i].savefig(path)
+        plt.close("all")
 
-        plots_res[i] = plots_res[i].replace("/", ":")
+        plots_res[i] = path.replace("/", ":")
 
-        plots_res[i] = "/imageplot" + "/" + plots_res[i]
+        plots_res[i] = "/imageplot/" + plots_res[i][1:]
+
+        print (plots_res[i])
 
     return metrics, plots_res
 

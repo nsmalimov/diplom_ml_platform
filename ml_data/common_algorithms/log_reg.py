@@ -1,63 +1,41 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.linear_model.logistic import LogisticRegression
 
-from sklearn import svm, datasets
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_curve, auc
-from sklearn.model_selection import train_test_split
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.preprocessing import label_binarize
+from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
+from sklearn.datasets import load_digits
+from sklearn.model_selection import learning_curve
+from sklearn.model_selection import ShuffleSplit
 
-
-def get_graphic_roc_auc(X, y, model):
-    # Import some data to play with
-    iris = datasets.load_iris()
-    X = iris.data
-    y = iris.target
-
-    # Binarize the output
-    y = label_binarize(y, classes=[0, 1, 2])
-    n_classes = y.shape[1]
-
-    # Add noisy features to make the problem harder
-    random_state = np.random.RandomState(0)
-    n_samples, n_features = X.shape
-    X = np.c_[X, random_state.randn(n_samples, 200 * n_features)]
-
-    # shuffle and split training and test sets
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.5,
-                                                        random_state=0)
-
-    # Learn to predict each class against the other
-    classifier = OneVsRestClassifier(svm.SVC(kernel='linear', probability=True,
-                                             random_state=random_state))
-    y_score = classifier.fit(X_train, y_train).decision_function(X_test)
-
-    # Compute ROC curve and ROC area for each class
-    fpr = dict()
-    tpr = dict()
-    roc_auc = dict()
-    for i in range(n_classes):
-        fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
-        roc_auc[i] = auc(fpr[i], tpr[i])
-
-    # Compute micro-average ROC curve and ROC area
-    fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
-    roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
-
+def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
+                        n_jobs=1, train_sizes=np.linspace(.1, 1.0, 5)):
     plt.figure()
-    lw = 2
-    plt.plot(fpr[2], tpr[2], color='darkorange',
-             lw=lw, label='ROC curve (area = %0.2f)' % roc_auc[2])
-    plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('Receiver operating characteristic example')
-    plt.legend(loc="lower right")
-    plt.show()
+    plt.title(title)
+    if ylim is not None:
+        plt.ylim(*ylim)
+    plt.xlabel("Training examples")
+    plt.ylabel("Score")
+    train_sizes, train_scores, test_scores = learning_curve(
+        estimator, X, y, cv=cv, n_jobs=n_jobs, train_sizes=train_sizes)
 
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
+    plt.grid()
+
+    plt.fill_between(train_sizes, train_scores_mean - train_scores_std,
+                     train_scores_mean + train_scores_std, alpha=0.1,
+                     color="r")
+    plt.fill_between(train_sizes, test_scores_mean - test_scores_std,
+                     test_scores_mean + test_scores_std, alpha=0.1, color="g")
+    plt.plot(train_sizes, train_scores_mean, 'o-', color="r",
+             label="Training score")
+    plt.plot(train_sizes, test_scores_mean, 'o-', color="g",
+             label="Cross-validation score")
+
+    plt.legend(loc="best")
     return plt
 
 def train(X, Y):
@@ -71,8 +49,15 @@ def test(model, X, Y):
     metrics = {}
     metrics['mean accuracy'] = model.score(X, Y)
 
+    X = X + X + X
+    Y = Y + Y + Y
+
     plots = {}
-    plots['roc_auc'] = get_graphic_roc_auc(X, Y, model)
+
+    title = "Learning Curves"
+    cv = ShuffleSplit(n_splits=1, test_size=0.2, random_state=0)
+
+    plots['learning curves'] = plot_learning_curve(model, title, X, Y, ylim=(0.7, 1.01), cv=cv, n_jobs=4)
 
     return metrics, plots
 
