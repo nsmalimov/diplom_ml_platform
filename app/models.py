@@ -181,7 +181,7 @@ db.create_all()
 
 
 def insert_common_algs_to_db():
-    path = ml_path + "common_algorithms/"
+    path = ml_path + "common_algorithms"
     alg_names = ["log_reg", "random_forest", "svm"]
 
     for i in alg_names:

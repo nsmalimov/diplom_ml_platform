@@ -39,7 +39,7 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
     return plt
 
 def train(X, Y):
-    lr = LogisticRegression()
+    lr = LogisticRegression(penalty='l1')
     lr.fit(X, Y)
 
     return lr
