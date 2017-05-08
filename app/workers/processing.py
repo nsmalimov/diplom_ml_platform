@@ -10,6 +10,7 @@ from imp import reload
 from sklearn.model_selection import train_test_split
 
 from app.util.funcs import ml_path
+from app.workers.metrics import get_predetermined_metrics
 
 
 def read_data(data, project):
@@ -157,12 +158,14 @@ def get_metrics_plots_from_alg(data, algorithm, project):
 
     plots_res = {}
 
+    y_class_predict, y_proba_predict = alg.classify(model, X_test)
+
     # TODO как закрыть plt
     # проверить как работает на сервере
 
     # какой-то график точно будет
     if plots is None:
-        return metrics, plots_res
+        return metrics, plots_res, y_test, y_class_predict, y_proba_predict
 
     for i in plots:
         path = path_to_plots + i + ".png"
@@ -174,25 +177,25 @@ def get_metrics_plots_from_alg(data, algorithm, project):
 
         plots_res[i] = "/imageplot/" + plots_res[i][1:]
 
-    return metrics, plots_res
+    print (metrics, plots_res, y_test, y_class_predict, y_proba_predict)
+
+    return metrics, plots_res, y_test, y_class_predict, y_proba_predict
 
 
 def start_processing_func(project, result_type, data, algorithm, analys_classif):
     type = result_type.name
 
     metrics1 = {}
-    metrics2 = {}
 
     plots1 = {}
     plots2 = {}
 
     if type == "train_save_metrics_graphics":
         train_and_save_model(data, algorithm, project)
-        print (algorithm)
 
         # метрики или свои на выбор или заранее заданные
-        metrics1, plots1 = get_metrics_plots_from_alg(data, algorithm, project)
-        # metrics2 = get_metrics_predetermined(data, algorithm, project)
+        metrics1, plots1, y_real_label, y_class_predict, y_proba_predict = get_metrics_plots_from_alg(data, algorithm, project)
+        metrics2 = get_predetermined_metrics(y_real_label, y_class_predict, y_proba_predict)
 
     data = {}
     data['type'] = 'train_save_metrics_graphics'

@@ -23,9 +23,14 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
 
     $scope.selectedCommonAlgorithm = null;
 
+    $scope.allTaskTypes = [{title: "Классификация"}, {title: "Кластеризация"}];
+
+    $scope.selectedTaskType = null;
+
     $scope.projectObject = {
         title: null,
-        description: null
+        description: null,
+        type: null
     };
 
     $scope.readFile = function (event) {
@@ -36,6 +41,7 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
     $scope.uploadFile = function () {
         $scope.fd.append("title", $scope.projectObject.title);
         $scope.fd.append("description", $scope.projectObject.description);
+        $scope.fd.append("type", $scope.projectObject.type);
 
         $http.post(baseUrl + urlsList.algorithm.upload_one + "/" + $scope.project_id, $scope.fd, {
             withCredentials: true,
@@ -74,8 +80,11 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
 
     $scope.loadAllCommonAlgorithms = function (project_id) {
         $http({
-            method: 'GET',
-            url: urlsList.algorithm.load_all_common
+            method: 'POST',
+            dataType: 'json',
+            url: urlsList.algorithm.load_all_common,
+            data: JSON.stringify({project_id: project_id, type: $scope.selectedTaskType}),
+            contentType: 'application/json'
         }).then(function successCallback(response) {
             $scope.commonAlgorithms = response.data;
 

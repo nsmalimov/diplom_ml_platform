@@ -87,11 +87,15 @@ class Data(db.Model):
 
 class Algorithm(db.Model):
     __tablename__ = "algorithm"
+
+    #TODO
+    # уникальность может повторяться
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(80), unique=True, nullable=False)
+    title = db.Column(db.String(80), unique=False, nullable=False)
     description = db.Column(db.String(120), default="None")
-    filename = db.Column(db.String(80), unique=True)
+    filename = db.Column(db.String(80), unique=False)
     preloaded = db.Column(db.Boolean, default=False, nullable=False)
+    type = db.Column(db.String(80))
 
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=True, default=None)
 
@@ -104,14 +108,16 @@ class Algorithm(db.Model):
             'description': self.description,
             'preloaded': self.preloaded,
             'project_id': self.project_id,
-            'filename': self.filename
+            'filename': self.filename,
+            'type': self.type
         }
 
-    def __init__(self, title, description, preloaded, filename):
+    def __init__(self, title, description, preloaded, filename, type):
         self.title = title
         self.description = description
         self.preloaded = preloaded
         self.filename = filename
+        self.type = type
 
     def __repr__(self):
         return '<Algorithm %r>' % self.id
@@ -182,12 +188,23 @@ db.create_all()
 
 def insert_common_algs_to_db():
     path = ml_path + "common_algorithms"
-    alg_names = ["log_reg", "random_forest", "svm"]
+    alg_names_classification = ["log_reg", "random_forest", "svm"]
 
-    for i in alg_names:
+    alg_names_clustering = ["KMeans"]
+
+    # TODO
+    # если не scikit
+
+    for i in alg_names_classification:
         res = Algorithm.query.filter_by(title=i).first()
         if (res == None):
-            algorithm = Algorithm(i, "scikit " + i, True, path + "/" + i + ".py")
+            algorithm = Algorithm(i, "scikit " + i, True, path + "/" + i + ".py", "classification")
+            db.session.add(algorithm)
+
+    for i in alg_names_clustering:
+        res = Algorithm.query.filter_by(title=i).first()
+        if (res == None):
+            algorithm = Algorithm(i, "scikit " + i, True, path + "/" + i + ".py", "clustering")
             db.session.add(algorithm)
 
     db.session.commit()
@@ -196,7 +213,7 @@ def insert_common_algs_to_db():
 def insert_result_types_to_db():
     arr = [
         # TODO другие типы
-        # ("automaticle_best_model", "Найти лучшую модель"),
+        ("automaticle_best_model", "Найти лучшую модель и вывести метрики"),
         # ("classify", "Классифицировать"),
         # ("metrics", "Метрики")
 

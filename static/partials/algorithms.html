@@ -5,6 +5,22 @@
                 <p>ALGORITHMS</p>
             </div>
             <div class="row voffset">
+                <p>Выберите тип задачи</p>
+                <ui-select ng-model="ctrl.selectedTaskType" theme="select2" style="min-width: 300px;"
+                           title="Выберите тип задачи" ng-change="onSelectUiClick(ctrl.selectedTaskType.title)">
+                    <ui-select-match placeholder="Select a task type">
+                        [[$select.selected.title]]
+                    </ui-select-match>
+                    <ui-select-choices
+                            repeat="item in allTaskTypes | propsFilter: {title: $select.search}">
+                        <div ng-bind-html="item.title | highlight: $select.search"></div>
+                        <small>
+                            title: [[item.title]]
+                        </small>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="row voffset">
                 <button type="button" class="btn btn-default" ng-click="showDescriptionModal()">
                     Описание
                 </button>

@@ -30,7 +30,6 @@ IMP
 
 Алгоритмы:
 
-
 Технология для моделирования и анализа систем классификации на основе машинного обучения
 
 Modelling and analysis technology for classification systems based on machine learning approach
@@ -41,10 +40,6 @@ Modelling and analysis technology for classification systems based on machine le
 
 включить jscs
 
-pickle new class
-
 отмена выбранных значений (в классификации)
 
 обученные модели создаются заново +
-
-почему точность 1?

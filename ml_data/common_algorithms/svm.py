@@ -1,5 +1,5 @@
 from sklearn import svm
-
+import numpy as np
 
 def train(X, Y):
     clf = svm.SVC()
@@ -10,7 +10,8 @@ def train(X, Y):
 
 def test(model, X, Y):
     metrics = {}
-    metrics['mean accuracy'] = model.score(X, Y)
+    metrics = None
+    #metrics['mean accuracy'] = model.score(X, Y)
 
     plots = None
 
@@ -18,6 +19,6 @@ def test(model, X, Y):
 
 
 def classify(model, features_arr):
-    res_arr_class = [model.predict(i) for i in features_arr]
-    res_arr_proba = [model.predict(i) for i in features_arr]
+    res_arr_class = [model.predict(np.array(i).reshape(1, -1)) for i in features_arr]
+    res_arr_proba = [model.predict_proba(np.array(i).reshape(1, -1)) for i in features_arr]
     return res_arr_class, res_arr_proba

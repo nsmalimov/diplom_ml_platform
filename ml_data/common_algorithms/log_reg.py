@@ -7,6 +7,7 @@ from sklearn.svm import SVC
 from sklearn.datasets import load_digits
 from sklearn.model_selection import learning_curve
 from sklearn.model_selection import ShuffleSplit
+import numpy as np
 
 def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
                         n_jobs=1, train_sizes=np.linspace(.1, 1.0, 5)):
@@ -47,7 +48,8 @@ def train(X, Y):
 
 def test(model, X, Y):
     metrics = {}
-    metrics['mean accuracy'] = model.score(X, Y)
+    metrics = None
+    #metrics['mean accuracy'] = model.score(X, Y)
 
     X = X + X + X
     Y = Y + Y + Y
@@ -63,6 +65,6 @@ def test(model, X, Y):
 
 
 def classify(model, features_arr):
-    res_arr_class = [model.predict(i) for i in features_arr]
-    res_arr_proba = [model.predict(i) for i in features_arr]
+    res_arr_class = [model.predict(np.array(i).reshape(1, -1)) for i in features_arr]
+    res_arr_proba = [model.predict_proba(np.array(i).reshape(1, -1)) for i in features_arr]
     return res_arr_class, res_arr_proba

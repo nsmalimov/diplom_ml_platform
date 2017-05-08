@@ -42,5 +42,4 @@ def test(model, X, Y):
 
 def classify(model, features_arr):
     res_arr_class = [model.predict(i) for i in features_arr]
-    res_arr_proba = [model.predict(i) for i in features_arr]
-    return res_arr_class, res_arr_proba
+    return res_arr_class, None
