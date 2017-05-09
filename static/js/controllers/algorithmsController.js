@@ -70,7 +70,7 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
         $http({
             method: 'POST',
             dataType: 'json',
-            url: urlsList.algorithm.load_all_by_project,
+            url: urlsList.algorithm.load_manual_by_project,
             data: JSON.stringify({project_id: project_id}),
             contentType: 'application/json'
         }).then(function successCallback(response) {
@@ -79,32 +79,15 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
         })
     };
 
-    $scope.loadAllCommonAlgorithms = function (selectedTaskType) {
+    $scope.loadAllCommonAlgorithms = function () {
         $http({
             method: 'POST',
             dataType: 'json',
             url: urlsList.algorithm.load_all_common,
-            data: JSON.stringify({type: selectedTaskType.name}),
+            data: JSON.stringify({type: $scope.selectedTaskType.name}),
             contentType: 'application/json'
         }).then(function successCallback(response) {
-            // $scope.commonAlgorithmsTitles = [];
-            //
             $scope.commonAlgorithms = response.data;
-            //
-            console.log($scope.commonAlgorithms);
-            //
-            // for (var i in $scope.commonAlgorithms) {
-            //     $scope.commonAlgorithmsTitles.push($scope.commonAlgorithms[i].title + "    ");
-            // }
-            //
-            // $scope.selectedCommonAlgorithmTitle = $scope.commonAlgorithmsTitles[0];
-            //
-            // $scope.selectedCommonAlgorithm = $scope.commonAlgorithms[0];
-            //
-            // console.log($scope.commonAlgorithms[0].title);
-            //
-            // $scope.changeCommonAlgorithms($scope.commonAlgorithms[0].title);
-
         }, function errorCallback(response) {
         });
     };
@@ -113,6 +96,7 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
 
     $scope.taskTypeChange = function (selectedTaskType) {
         $scope.loadAllCommonAlgorithms(selectedTaskType);
+        $scope.selectedTaskType = selectedTaskType;
     };
 
     $scope.onSelectUiClick = function (project_id) {
@@ -122,7 +106,7 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
 
     $scope.showDescriptionModal = function () {
         ModalService.showModal({
-            templateUrl: "/static/partials/modals/algorithmDesc.html",
+            templateUrl: $scope.selectedTaskType.name === "classification" ? "/static/partials/modals/algorithmClassifDesc.html" : "/static/partials/modals/algorithmClusterDesc.html",
             controller: "modalController"
         }).then(function (modal) {
             modal.element.modal();
@@ -179,13 +163,5 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
     $scope.onclose = function () {
         alert('Close');
         console.log($scope);
-    };
-
-    $scope.changeCommonAlgorithms = function (selectedCommonAlgorithmTitle) {
-        for (var i in $scope.commonAlgorithms) {
-            if (selectedCommonAlgorithmTitle === ($scope.commonAlgorithms[i].title + "    ")) {
-                $scope.selectedCommonAlgorithm = $scope.commonAlgorithms[i];
-            }
-        }
     };
 }]);

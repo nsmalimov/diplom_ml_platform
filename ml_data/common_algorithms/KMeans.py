@@ -16,4 +16,4 @@ def test(model, X, Y):
 
 
 def get_labels(model, features_arr):
-    return None, None
+    return None

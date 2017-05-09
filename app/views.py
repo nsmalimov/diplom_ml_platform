@@ -120,12 +120,27 @@ def load_all_data_by_project():
     return make_response(json.dumps([i.serialize for i in all_data_by_project]))
 
 
+@app.route('/algorithm_load_manual_by_project', methods=['POST'])
+def load_manual_algorithms_by_project():
+    jsonData = request.get_json()
+    project_id = jsonData["project_id"]
+
+    all_algorithms_by_project = Algorithm.query.filter(Algorithm.project_id == project_id).all()
+
+    return make_response(json.dumps([i.serialize for i in all_algorithms_by_project]))
+
 @app.route('/algorithm_load_all_by_project', methods=['POST'])
 def load_all_algorithms_by_project():
     jsonData = request.get_json()
     project_id = jsonData["project_id"]
 
     all_algorithms_by_project = Algorithm.query.filter(Algorithm.project_id == project_id).all()
+
+    common_algorithms = Algorithm.query.filter(Algorithm.preloaded == True).all()
+
+    all_algorithms_by_project += common_algorithms
+
+    print (all_algorithms_by_project)
 
     return make_response(json.dumps([i.serialize for i in all_algorithms_by_project]))
 
@@ -155,11 +170,7 @@ def load_common():
     jsonData = request.get_json()
     taskType = jsonData['type']
 
-    print (taskType)
-
     common_algorithms = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == taskType).all()
-
-    print (common_algorithms)
 
     return make_response(json.dumps([i.serialize for i in common_algorithms]))
 

@@ -17,6 +17,7 @@ var urlsList = {
     algorithm: {
         upload_one: "algorithm_upload",
         load_all: "algorithm_load_all",
+        load_manual_by_project: "algorithm_load_all_by_project",
         load_all_by_project: "algorithm_load_all_by_project",
         delete: "delete_object",
         load_all_common: "algorithm_load_common"
