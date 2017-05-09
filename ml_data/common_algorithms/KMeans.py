@@ -7,7 +7,7 @@ def train(X):
 
     return kmeans_fitted
 
-
+# оценка через labels
 def test(model, X, Y):
     metrics = None
     plots = None
@@ -16,6 +16,4 @@ def test(model, X, Y):
 
 
 def get_labels(model, features_arr):
-    res_arr_class = [model.predict(np.array(i).reshape(1, -1)) for i in features_arr]
-    res_arr_proba = [model.predict_proba(np.array(i).reshape(1, -1)) for i in features_arr]
-    return res_arr_class, res_arr_proba
+    return None, None

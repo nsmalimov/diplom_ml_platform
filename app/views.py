@@ -150,9 +150,16 @@ def delete_object():
     return 'object deleted'
 
 
-@app.route('/algorithm_load_common', methods=['GET'])
+@app.route('/algorithm_load_common', methods=['POST'])
 def load_common():
-    common_algorithms = Algorithm.query.filter(Algorithm.preloaded == True).all()
+    jsonData = request.get_json()
+    taskType = jsonData['type']
+
+    print (taskType)
+
+    common_algorithms = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == taskType).all()
+
+    print (common_algorithms)
 
     return make_response(json.dumps([i.serialize for i in common_algorithms]))
 

@@ -23,7 +23,8 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
 
     $scope.selectedCommonAlgorithm = null;
 
-    $scope.allTaskTypes = [{title: "Классификация"}, {title: "Кластеризация"}];
+    $scope.allTaskTypes = [{title: "Классификация", name: "classification"},
+        {title: "Кластеризация", name: "clustering"}];
 
     $scope.selectedTaskType = null;
 
@@ -78,23 +79,31 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
         })
     };
 
-    $scope.loadAllCommonAlgorithms = function (project_id) {
+    $scope.loadAllCommonAlgorithms = function (selectedTaskType) {
         $http({
             method: 'POST',
             dataType: 'json',
             url: urlsList.algorithm.load_all_common,
-            data: JSON.stringify({project_id: project_id, type: $scope.selectedTaskType}),
+            data: JSON.stringify({type: selectedTaskType.name}),
             contentType: 'application/json'
         }).then(function successCallback(response) {
+            // $scope.commonAlgorithmsTitles = [];
+            //
             $scope.commonAlgorithms = response.data;
-
-            for (var i in $scope.commonAlgorithms) {
-                $scope.commonAlgorithmsTitles.push($scope.commonAlgorithms[i].title + "    ");
-            }
-
-            $scope.selectedCommonAlgorithmTitle = $scope.commonAlgorithmsTitles[0];
-
-            $scope.selectedCommonAlgorithm = $scope.commonAlgorithms[0];
+            //
+            console.log($scope.commonAlgorithms);
+            //
+            // for (var i in $scope.commonAlgorithms) {
+            //     $scope.commonAlgorithmsTitles.push($scope.commonAlgorithms[i].title + "    ");
+            // }
+            //
+            // $scope.selectedCommonAlgorithmTitle = $scope.commonAlgorithmsTitles[0];
+            //
+            // $scope.selectedCommonAlgorithm = $scope.commonAlgorithms[0];
+            //
+            // console.log($scope.commonAlgorithms[0].title);
+            //
+            // $scope.changeCommonAlgorithms($scope.commonAlgorithms[0].title);
 
         }, function errorCallback(response) {
         });
@@ -102,7 +111,9 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
 
     $scope.loadAllProjects();
 
-    $scope.loadAllCommonAlgorithms();
+    $scope.taskTypeChange = function (selectedTaskType) {
+        $scope.loadAllCommonAlgorithms(selectedTaskType);
+    };
 
     $scope.onSelectUiClick = function (project_id) {
         $scope.project_id = project_id;
@@ -137,7 +148,15 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
 
     $scope.showCommonAlgorithms = function () {
         $scope.commonAlgorithmsFlag = !$scope.commonAlgorithmsFlag;
-        $scope.strButtonCheckCommonAlgorithmsFlag = "Выбрать проект";
+        if ($scope.strButtonCheckCommonAlgorithmsFlag === "Выбрать проект")
+        {
+            $scope.strButtonCheckCommonAlgorithmsFlag = "Показать стандартные";
+        }
+        else
+        {
+            $scope.strButtonCheckCommonAlgorithmsFlag = "Выбрать проект";
+        }
+
     };
 
     $scope.checked = false;

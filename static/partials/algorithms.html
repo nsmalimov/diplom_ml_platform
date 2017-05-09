@@ -7,7 +7,7 @@
             <div class="row voffset">
                 <p>Выберите тип задачи</p>
                 <ui-select ng-model="ctrl.selectedTaskType" theme="select2" style="min-width: 300px;"
-                           title="Выберите тип задачи" ng-change="onSelectUiClick(ctrl.selectedTaskType.title)">
+                           title="Выберите тип задачи" ng-change="taskTypeChange(ctrl.selectedTaskType)">
                     <ui-select-match placeholder="Select a task type">
                         [[$select.selected.title]]
                     </ui-select-match>
@@ -15,7 +15,7 @@
                             repeat="item in allTaskTypes | propsFilter: {title: $select.search}">
                         <div ng-bind-html="item.title | highlight: $select.search"></div>
                         <small>
-                            title: [[item.title]]
+                            [[item.name]]
                         </small>
                     </ui-select-choices>
                 </ui-select>
@@ -33,15 +33,11 @@
 
             <div ng-if="commonAlgorithmsFlag">
                 <div class="row voffset">
-                    <div bs-dropdown
-                         bs-dropdown-display="MyDropDown"
-                         bs-dropdown-items="commonAlgorithmsTitles"
-                         ng-model="selectedCommonAlgorithmTitle"
-                         ng-change="changeCommonAlgorithms(selectedCommonAlgorithmTitle)"></div>
-                </div>
-                <div class="row voffset">
-                    <p>Название: [[selectedCommonAlgorithm.title]]</p>
-                    <p>Описание: [[selectedCommonAlgorithm.description]]</p>
+                    <div ng-repeat="item in commonAlgorithms">
+                        <div>[[item.title]]</div>
+                        <div>[[item.description]]</div>
+                        <br>
+                    </div>
                 </div>
             </div>
 
