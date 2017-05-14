@@ -3,9 +3,10 @@ from sklearn.metrics import f1_score
 from sklearn.metrics import log_loss
 from sklearn.metrics.classification import hamming_loss
 import numpy as np
+from app.init_server import num_cpu
 
 def train(X, Y):
-    rf = RandomForestClassifier()
+    rf = RandomForestClassifier(n_jobs=num_cpu)
     rf.fit(X, Y)
 
     return rf
@@ -18,7 +19,6 @@ def test(model, X, Y):
     predicted_proba = model.predict(np.array(X))
 
     # precision recall f1 = 0 ...
-
 
     metrics['hamming loss'] = hamming_loss(Y, predicted_proba)
 

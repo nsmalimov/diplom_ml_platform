@@ -8,6 +8,7 @@ from sklearn.datasets import load_digits
 from sklearn.model_selection import learning_curve
 from sklearn.model_selection import ShuffleSplit
 import numpy as np
+from app.init_server import num_cpu
 
 def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
                         n_jobs=1, train_sizes=np.linspace(.1, 1.0, 5)):
@@ -40,7 +41,7 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
     return plt
 
 def train(X, Y):
-    lr = LogisticRegression(penalty='l1')
+    lr = LogisticRegression(penalty='l1', n_jobs=num_cpu)
     lr.fit(X, Y)
 
     return lr
