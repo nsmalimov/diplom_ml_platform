@@ -3,11 +3,16 @@ from sklearn import datasets
 from sklearn.cluster.affinity_propagation_ import AffinityPropagation
 from sklearn.cluster.birch import Birch
 from sklearn.cross_validation import train_test_split
-from sklearn.cluster import MeanShift
+from sklearn.cluster import MeanShift, MiniBatchKMeans
+from sklearn.cluster import DBSCAN
+import time
+
+path = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/"
+path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
 
 def prepare_data():
     data = []
-    f = open("/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/digits.csv", "r")
+    f = open(path + "digits.csv", "r")
 
     for i in f.readlines():
         s = i.replace("\n", "")
@@ -16,7 +21,7 @@ def prepare_data():
         data.append(s_new)
     f.close()
 
-    f = open("/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/digits.csv", "w")
+    f = open(path + "digits.csv", "w")
 
     for i in data:
         f.write(i + "\n")
@@ -26,7 +31,7 @@ def prepare_data():
 
 X, Y = [], []
 
-f = open("/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/digits.csv", "r")
+f = open(path + "digits.csv", "r")
 
 for i in f.readlines():
     s = i.replace("\n", "")
@@ -43,16 +48,21 @@ X = X[:delimiter]
 
 Y = Y[:delimiter]
 
-# dict_1 = {}
-#
-# for i in Y:
-#     if i in dict_1:
-#         dict_1[i] += 1
-#     else:
-#         dict_1[i] = 1
-#
-# for i in dict_1:
-#     print (str(i) + str(dict_1[i]))
+print (len(X))
+print (len(Y))
+
+dict_1 = {}
+
+for i in Y:
+    if i in dict_1:
+        dict_1[i] += 1
+    else:
+        dict_1[i] = 1
+
+for i in dict_1:
+    print (str(i) + " " + str(dict_1[i]))
+
+exit()
 
 from sklearn.metrics import adjusted_rand_score
 
@@ -78,6 +88,8 @@ def affinity_propagation(X_train, X_test, Y_train, Y_test):
     ap = AffinityPropagation().fit(X_train)
     predicted = ap.predict(X_test)
 
+    print (predicted)
+
     print (adjusted_rand_score(Y_test, predicted))
 
 def birch(X_train, X_test, Y_train, Y_test):
@@ -90,24 +102,44 @@ def mean_shift(X_train, X_test, Y_train, Y_test):
     ms = MeanShift(n_jobs=4).fit(X_train)
     predicted = ms.predict(X_test)
 
+    print(predicted)
+
     print(adjusted_rand_score(Y_test, predicted))
 
-import time
+def mini_batch_kmeans(X_train, X_test, Y_train, Y_test):
+    mbk = MiniBatchKMeans().fit(X_train)
+
+    predicted = mbk.fit_predict(X_test)
+
+    print (predicted)
+
+    print(adjusted_rand_score(Y_test, predicted))
+
+import multiprocessing
+
+num_cpu = multiprocessing.cpu_count()
+
+print (num_cpu)
+
+# start_time = time.time()
+# kmeans(X_train, X_test, Y_train, Y_test)
+# print("--- %s seconds ---" % (time.time() - start_time))
+
+# start_time = time.time()
+# birch(X_train, X_test, Y_train, Y_test)
+# print("--- %s seconds ---" % (time.time() - start_time))
+#
+# start_time = time.time()
+# affinity_propagation(X_train, X_test, Y_train, Y_test)
+# print("--- %s seconds ---" % (time.time() - start_time))
+#
+# start_time = time.time()
+# mean_shift(X_train, X_test, Y_train, Y_test)
+# print("--- %s seconds ---" % (time.time() - start_time))
+#
 start_time = time.time()
-kmeans(X_train, X_test, Y_train, Y_test)
+mini_batch_kmeans(X_train, X_test, Y_train, Y_test)
 print("--- %s seconds ---" % (time.time() - start_time))
-
-#start_time = time.time()
-#birch(X_train, X_test, Y_train, Y_test)
-#print("--- %s seconds ---" % (time.time() - start_time))
-
-#start_time = time.time()
-#affinity_propagation(X_train, X_test, Y_train, Y_test)
-#print("--- %s seconds ---" % (time.time() - start_time))
-
-#start_time = time.time()
-#mean_shift(X_train, X_test, Y_train, Y_test)
-#print("--- %s seconds ---" % (time.time() - start_time))
 
 #\item k-means \cite{md};
 #\item Affinity Propagation \cite{md};

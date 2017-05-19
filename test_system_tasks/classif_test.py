@@ -1,9 +1,13 @@
 from sklearn.cross_validation import train_test_split
 
+path = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/"
+path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
+
+filename = "commonData.csv"
 
 def prepare_data():
     data = []
-    f = open("/Users/Nurislam/PycharmProjects/diplom_ml_platform/test_system_tasks/datasets/wine.csv", "r")
+    f = open(path + filename, "r")
 
     for i in f.readlines():
         s = i.replace("\n", "")
@@ -12,7 +16,7 @@ def prepare_data():
         data.append(s_new)
     f.close()
 
-    f = open("/Users/Nurislam/PycharmProjects/diplom_ml_platform/test_system_tasks/datasets/wine.csv", "w")
+    f = open(path + filename, "w")
 
     for i in data:
         f.write(i + "\n")
@@ -22,7 +26,7 @@ def prepare_data():
 
 X, Y = [], []
 
-f = open("/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/wine.csv", "r")
+f = open(path + filename, "r")
 
 for i in f.readlines():
     s = i.replace("\n", "")
