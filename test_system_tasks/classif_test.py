@@ -37,13 +37,25 @@ for i in f.readlines():
 
 f.close()
 
+def mean_score(y_true, y_pred):
+    correct = 0
+
+    for i in range(len(y_true)):
+        if y_true[i] == y_pred[i]:
+            correct += 1
+
+    mean_score = correct / (len(y_pred) + 0.0)
+
+    return mean_score
+
+
 import ml_data.common_algorithms.random_forest
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 print (len(X_test))
 print (len(X_train))
 model = ml_data.common_algorithms.random_forest.train(X_train, Y_train)
-#print (model)
+
 print (model.score(X_test, Y_test))
 
 import ml_data.common_algorithms.log_reg

@@ -33,7 +33,7 @@ f.close()
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
-def neural_model(X, y):
+def neural_model_wine(X, y):
     X = csr_matrix(X)
 
     y = [int(i) for i in y]
@@ -71,7 +71,7 @@ def neural_model(X, y):
     return model
 
 def model_neural_test(X_test, Y_test):
-    model = load_model("/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model")
+    model = load_model("/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_wine")
 
     predict = model.predict(X_test)
 
@@ -90,9 +90,9 @@ def model_neural_test(X_test, Y_test):
     print (mean_score / (len(res_arr) + 0.0))
 
 
-#model = neural_model(X_train, Y_train)
+model = neural_model_wine(X_train, Y_train)
 
-#save_model(model, "/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model")
+save_model(model, "/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_wine")
 
 model_neural_test(X_test, Y_test)
 
