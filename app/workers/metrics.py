@@ -21,6 +21,7 @@ predetermined_metrics_dict_classif = {"log_loss": [lambda y_true, y_pred: log_lo
 predetermined_metrics_dict_cluster = {"adjusted_rand_score":
                                           lambda y_true, y_pred: adjusted_rand_score(y_true, y_pred)}
 
+# эти метрики всегда могут вычисляться
 def get_predetermined_metrics_classif(y_real_label, y_class_predict, y_proba_predict=None):
     metrics = {}
 
