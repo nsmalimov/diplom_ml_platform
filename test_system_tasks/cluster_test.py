@@ -8,7 +8,7 @@ from sklearn.cluster import DBSCAN
 import time
 
 path = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/"
-path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
+#path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
 
 def prepare_data():
     data = []
@@ -42,27 +42,27 @@ for i in f.readlines():
 
 f.close()
 
-delimiter = int(len(X)/100*10)
+#delimiter = int(len(X)/100*10)
 
-X = X[:delimiter]
+#X = X[:delimiter]
 
-Y = Y[:delimiter]
+#Y = Y[:delimiter]
 
 print (len(X))
 print (len(Y))
 
-dict_1 = {}
-
-for i in Y:
-    if i in dict_1:
-        dict_1[i] += 1
-    else:
-        dict_1[i] = 1
-
-for i in dict_1:
-    print (str(i) + " " + str(dict_1[i]))
-
-exit()
+# dict_1 = {}
+#
+# for i in Y:
+#     if i in dict_1:
+#         dict_1[i] += 1
+#     else:
+#         dict_1[i] = 1
+#
+# for i in dict_1:
+#     print (str(i) + " " + str(dict_1[i]))
+#
+# exit()
 
 from sklearn.metrics import adjusted_rand_score
 

@@ -95,8 +95,8 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
     $scope.loadAllProjects();
 
     $scope.taskTypeChange = function (selectedTaskType) {
-        $scope.loadAllCommonAlgorithms(selectedTaskType);
         $scope.selectedTaskType = selectedTaskType;
+        $scope.loadAllCommonAlgorithms();
     };
 
     $scope.onSelectUiClick = function (project_id) {
