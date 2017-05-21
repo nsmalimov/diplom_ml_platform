@@ -71,7 +71,7 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
             method: 'POST',
             dataType: 'json',
             url: urlsList.algorithm.load_manual_by_project,
-            data: JSON.stringify({project_id: project_id}),
+            data: JSON.stringify({project_id: project_id, type: $scope.selectedTaskType.name}),
             contentType: 'application/json'
         }).then(function successCallback(response) {
             $scope.allAlgorithmsByProjectId = response.data;

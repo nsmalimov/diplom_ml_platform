@@ -18,4 +18,5 @@ def test(model, X, Y):
 
 
 def get_labels(model, features_arr):
-    return None
+    labels = model.predict(features_arr)
+    return labels

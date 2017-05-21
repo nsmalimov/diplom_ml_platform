@@ -10,7 +10,7 @@ from imp import reload
 from sklearn.model_selection import train_test_split
 
 from app.util.funcs import ml_path
-from app.workers.metrics import get_predetermined_metrics
+from app.workers.metrics import get_predetermined_metrics_classif, get_predetermined_metrics_cluster
 
 
 def read_data(data, project):
@@ -65,7 +65,13 @@ def train_model(algorithm, X, Y, project):
 
     X_train, _, Y_train, _ = train_test_split(X, Y, test_size=0.33, random_state=42)
 
-    model = alg.train(X_train, Y_train)
+    model = None
+
+    if algorithm.type == "classification":
+        model = alg.train(X_train, Y_train)
+
+    if algorithm.type == "clustering":
+        model = alg.train(X_train)
 
     return model
 
@@ -137,7 +143,7 @@ def predict():
 
 
 # возможно стоит тоже по хеш сумме проверять уже существующий
-def get_metrics_plots_from_alg(data, algorithm, project):
+def get_metrics_plots_from_alg_classif(data, algorithm, project):
     X, Y = read_data(data, project)
 
     hash = get_hash_by_data_alg(data, algorithm, project)
@@ -177,12 +183,52 @@ def get_metrics_plots_from_alg(data, algorithm, project):
 
         plots_res[i] = "/imageplot/" + plots_res[i][1:]
 
-    print (metrics, plots_res, y_test, y_class_predict, y_proba_predict)
-
     return metrics, plots_res, y_test, y_class_predict, y_proba_predict
 
 
-def start_processing_func(project, result_type, data, algorithm, analys_classif):
+def get_metrics_plots_from_alg_cluster(data, algorithm, project):
+    X, Y = read_data(data, project)
+
+    hash = get_hash_by_data_alg(data, algorithm, project)
+    model = read_model(project, hash)
+
+    _, X_test, _, y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+
+    if algorithm.preloaded:
+        path_to_alg = algorithm.filename
+    else:
+        path_to_alg = ml_path + "project_" + str(project.id) + "/algorithms/" + algorithm.filename
+
+    alg = import_alg(path_to_alg)
+
+    metrics, plots = alg.test(model, X_test, y_test)
+
+    path_to_plots = ml_path + "project_" + str(project.id) + "/results/images/"
+
+    plots_res = {}
+
+    clusters_from_alg = alg.get_labels(model, X_test)
+
+    # TODO как закрыть plt
+    # проверить как работает на сервере
+
+    # какой-то график точно будет
+    if plots is None:
+        return metrics, plots_res, y_test, clusters_from_alg
+
+    for i in plots:
+        path = path_to_plots + i + ".png"
+        path = path.replace(" ", "_")
+        plots[i].savefig(path)
+        #plt.close("all")
+
+        plots_res[i] = path.replace("/", ":")
+
+        plots_res[i] = "/imageplot/" + plots_res[i][1:]
+
+    return metrics, plots_res, y_test, clusters_from_alg
+
+def start_processing_func_classif(project, result_type, data, algorithm, analys_classif):
     type = result_type.name
 
     metrics1 = {}
@@ -194,14 +240,49 @@ def start_processing_func(project, result_type, data, algorithm, analys_classif)
         train_and_save_model(data, algorithm, project)
 
         # метрики или свои на выбор или заранее заданные
-        metrics1, plots1, y_real_label, y_class_predict, y_proba_predict = get_metrics_plots_from_alg(data, algorithm, project)
-        metrics2 = get_predetermined_metrics(y_real_label, y_class_predict, y_proba_predict)
+        metrics1, plots1, y_real_label, y_class_predict, y_proba_predict = get_metrics_plots_from_alg_classif(data, algorithm, project)
+        metrics2 = get_predetermined_metrics_classif(y_real_label, y_class_predict, y_proba_predict)
 
     data = {}
     data['type'] = 'train_save_metrics_graphics'
 
-    data['metrics'] = metrics1
-    data['metrics'].update(metrics2)
+    if not(metrics1 is None):
+        data['metrics'] = metrics1
+        data['metrics'].update(metrics2)
+    else:
+        data['metrics'] = metrics2
+
+    data['img'] = plots1
+    data['img'].update(plots2)
+
+    res_json = json.dumps(data)
+
+    return res_json
+
+
+def start_processing_func_cluster(project, result_type, data, algorithm, analys_classif):
+    type = result_type.name
+
+    metrics1 = {}
+
+    plots1 = {}
+    plots2 = {}
+
+    if type == "train_save_metrics_graphics":
+        train_and_save_model(data, algorithm, project)
+
+        # метрики или свои на выбор или заранее заданные
+        metrics1, plots1, real_clusters_arr, clusters_from_alg = get_metrics_plots_from_alg_cluster(data, algorithm, project)
+        metrics2 = get_predetermined_metrics_cluster(real_clusters_arr, clusters_from_alg)
+
+    data = {}
+    data['type'] = 'train_save_metrics_graphics'
+
+    if not(metrics1 is None):
+        data['metrics'] = metrics1
+        data['metrics'].update(metrics2)
+    else:
+        data['metrics'] = metrics2
 
     data['img'] = plots1
     data['img'].update(plots2)

@@ -190,21 +190,23 @@ def insert_common_algs_to_db():
     path = ml_path + "common_algorithms"
     alg_names_classification = ["log_reg", "random_forest", "svm"]
 
-    alg_names_clustering = ["KMeans"]
+    alg_names_clustering = ["k_means", "affinity_propagation", "birch"]
 
     # TODO
     # если не scikit
 
     for i in alg_names_classification:
         res = Algorithm.query.filter_by(title=i).first()
+        type = "classification"
         if (res == None):
-            algorithm = Algorithm(i, "scikit " + i, True, path + "/" + i + ".py", "classification")
+            algorithm = Algorithm(i, "scikit " + i, True, path + "/" + type + "/" + i + ".py", type)
             db.session.add(algorithm)
 
     for i in alg_names_clustering:
         res = Algorithm.query.filter_by(title=i).first()
+        type = "clustering"
         if (res == None):
-            algorithm = Algorithm(i, "scikit " + i, True, path + "/" + i + ".py", "clustering")
+            algorithm = Algorithm(i, "scikit " + i, True, path + "/" + type + "/" + i + ".py", type)
             db.session.add(algorithm)
 
     db.session.commit()

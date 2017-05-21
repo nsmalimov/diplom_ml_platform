@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 from app.models import Project, Data, Algorithm, AnalysClassif, ResultTypes, db
 from app.util.funcs import *
-from app.workers.processing import start_processing_func
+from app.workers.processing import start_processing_func_classif, start_processing_func_cluster
 from run import app
 
 
@@ -129,6 +129,20 @@ def load_manual_algorithms_by_project():
 
     return make_response(json.dumps([i.serialize for i in all_algorithms_by_project]))
 
+@app.route('/algorithm_load_all_by_project_by_type', methods=['POST'])
+def load_all_algorithms_by_project_by_type():
+    jsonData = request.get_json()
+    project_id = jsonData["project_id"]
+    taskType = jsonData["type"]
+
+    all_algorithms_by_project = Algorithm.query.filter(Algorithm.project_id == project_id, Algorithm.type == taskType).all()
+
+    common_algorithms = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == taskType).all()
+
+    all_algorithms_by_project += common_algorithms
+
+    return make_response(json.dumps([i.serialize for i in all_algorithms_by_project]))
+
 @app.route('/algorithm_load_all_by_project', methods=['POST'])
 def load_all_algorithms_by_project():
     jsonData = request.get_json()
@@ -140,10 +154,7 @@ def load_all_algorithms_by_project():
 
     all_algorithms_by_project += common_algorithms
 
-    print (all_algorithms_by_project)
-
     return make_response(json.dumps([i.serialize for i in all_algorithms_by_project]))
-
 
 @app.route('/delete_object', methods=['POST'])
 def delete_object():
@@ -209,4 +220,16 @@ def start_processing():
 
     db.session.commit()
 
-    return start_processing_func(project, result_type_1, record_1, algorithm_1, analys_classif)
+    data = {"result": "error", "cause": None}
+
+    res_json = json.dumps(data)
+
+    print (res_json)
+
+    if algorithm_1.type == "classification":
+        res_json = start_processing_func_classif(project, result_type_1, record_1, algorithm_1, analys_classif)
+
+    if algorithm_1.type == "clustering":
+        res_json = start_processing_func_cluster(project, result_type_1, record_1, algorithm_1, analys_classif)
+
+    return res_json
