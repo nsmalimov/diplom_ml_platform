@@ -1,5 +1,6 @@
-from sklearn import svm
 import numpy as np
+from sklearn import svm
+
 
 def train(X, Y):
     clf = svm.SVC()
@@ -11,7 +12,7 @@ def train(X, Y):
 def test(model, X, Y):
     metrics = {}
     metrics = None
-    #metrics['mean accuracy'] = model.score(X, Y)
+    # metrics['mean accuracy'] = model.score(X, Y)
 
     plots = None
 

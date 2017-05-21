@@ -1,9 +1,9 @@
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import f1_score
-from sklearn.metrics import log_loss
-from sklearn.metrics.classification import hamming_loss
 import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics.classification import hamming_loss
+
 from app.init_server import num_cpu
+
 
 def train(X, Y):
     rf = RandomForestClassifier(n_jobs=num_cpu)
@@ -14,7 +14,7 @@ def train(X, Y):
 
 def test(model, X, Y):
     metrics = {}
-    #metrics['mean accuracy'] = model.score(X, Y)
+    # metrics['mean accuracy'] = model.score(X, Y)
 
     predicted_proba = model.predict(np.array(X))
 

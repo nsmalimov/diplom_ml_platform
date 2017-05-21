@@ -1,14 +1,11 @@
-from app.util.plot import plt
 import numpy as np
 from sklearn.linear_model.logistic import LogisticRegression
-
-from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVC
-from sklearn.datasets import load_digits
-from sklearn.model_selection import learning_curve
 from sklearn.model_selection import ShuffleSplit
-import numpy as np
+from sklearn.model_selection import learning_curve
+
 from app.init_server import num_cpu
+from app.util.plot import plt
+
 
 def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
                         n_jobs=1, train_sizes=np.linspace(.1, 1.0, 5)):
@@ -40,6 +37,7 @@ def plot_learning_curve(estimator, title, X, y, ylim=None, cv=None,
     plt.legend(loc="best")
     return plt
 
+
 def train(X, Y):
     lr = LogisticRegression(penalty='l1', n_jobs=num_cpu)
     lr.fit(X, Y)
@@ -50,7 +48,7 @@ def train(X, Y):
 def test(model, X, Y):
     metrics = {}
     metrics = None
-    #metrics['mean accuracy'] = model.score(X, Y)
+    # metrics['mean accuracy'] = model.score(X, Y)
 
     X = X + X + X
     Y = Y + Y + Y

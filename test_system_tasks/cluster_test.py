@@ -137,9 +137,9 @@ print (num_cpu)
 # mean_shift(X_train, X_test, Y_train, Y_test)
 # print("--- %s seconds ---" % (time.time() - start_time))
 #
-start_time = time.time()
-mini_batch_kmeans(X_train, X_test, Y_train, Y_test)
-print("--- %s seconds ---" % (time.time() - start_time))
+# start_time = time.time()
+# mini_batch_kmeans(X_train, X_test, Y_train, Y_test)
+# print("--- %s seconds ---" % (time.time() - start_time))
 
 #\item k-means \cite{md};
 #\item Affinity Propagation \cite{md};

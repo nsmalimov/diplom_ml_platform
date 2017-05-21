@@ -1,9 +1,11 @@
-from sklearn.cluster.affinity_propagation_ import AffinityPropagation
+from sklearn.cluster.k_means_ import MiniBatchKMeans
+
 
 def train(X):
-    ap = AffinityPropagation().fit(X)
+    ap = MiniBatchKMeans().fit(X)
 
     return ap
+
 
 # оценка через labels
 def test(model, X, Y):
