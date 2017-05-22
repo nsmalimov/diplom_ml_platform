@@ -6,11 +6,12 @@ import pickle
 import os
 #from app.util.plot import plt
 from imp import reload
-
+from app.util.plot import plt
 from sklearn.model_selection import train_test_split
 
 from app.util.funcs import ml_path
 from app.workers.metrics import get_predetermined_metrics_classif, get_predetermined_metrics_cluster
+from app.workers.plots import get_predetermined_plots_classif
 
 
 def read_data(data, project):
@@ -171,7 +172,7 @@ def get_metrics_plots_from_alg_classif(data, algorithm, project):
 
     # какой-то график точно будет
     if plots is None:
-        return metrics, plots_res, y_test, y_class_predict, y_proba_predict
+        return metrics, X_test, plots_res, y_test, y_class_predict, y_proba_predict
 
     for i in plots:
         path = path_to_plots + i + ".png"
@@ -183,7 +184,7 @@ def get_metrics_plots_from_alg_classif(data, algorithm, project):
 
         plots_res[i] = "/imageplot/" + plots_res[i][1:]
 
-    return metrics, plots_res, y_test, y_class_predict, y_proba_predict
+    return metrics, X_test, plots_res, y_test, y_class_predict, y_proba_predict
 
 
 def get_metrics_plots_from_alg_cluster(data, algorithm, project):
@@ -214,7 +215,7 @@ def get_metrics_plots_from_alg_cluster(data, algorithm, project):
 
     # какой-то график точно будет
     if plots is None:
-        return metrics, plots_res, y_test, clusters_from_alg
+        return metrics, X_test, plots_res, y_test, clusters_from_alg
 
     for i in plots:
         path = path_to_plots + i + ".png"
@@ -226,7 +227,7 @@ def get_metrics_plots_from_alg_cluster(data, algorithm, project):
 
         plots_res[i] = "/imageplot/" + plots_res[i][1:]
 
-    return metrics, plots_res, y_test, clusters_from_alg
+    return metrics, X_test, plots_res, y_test, clusters_from_alg
 
 def start_processing_func_classif(project, result_type, data, algorithm, analys_classif):
     type = result_type.name
@@ -240,8 +241,15 @@ def start_processing_func_classif(project, result_type, data, algorithm, analys_
         train_and_save_model(data, algorithm, project)
 
         # метрики или свои на выбор или заранее заданные
-        metrics1, plots1, y_real_label, y_class_predict, y_proba_predict = get_metrics_plots_from_alg_classif(data, algorithm, project)
+        metrics1, X_test, plots1, y_real_label, y_class_predict, y_proba_predict = get_metrics_plots_from_alg_classif(data, algorithm, project)
+        plt.clf()
+        plt.cla()
+        plt.close()
         metrics2 = get_predetermined_metrics_classif(y_real_label, y_class_predict, y_proba_predict)
+        plots2 = get_predetermined_plots_classif(X_test, y_class_predict, project.id)
+        plt.clf()
+        plt.cla()
+        plt.close()
 
     data = {}
     data['type'] = 'train_save_metrics_graphics'
@@ -272,8 +280,15 @@ def start_processing_func_cluster(project, result_type, data, algorithm, analys_
         train_and_save_model(data, algorithm, project)
 
         # метрики или свои на выбор или заранее заданные
-        metrics1, plots1, real_clusters_arr, clusters_from_alg = get_metrics_plots_from_alg_cluster(data, algorithm, project)
+        metrics1, X_test, plots1, real_clusters_arr, clusters_from_alg = get_metrics_plots_from_alg_cluster(data, algorithm, project)
+        plt.clf()
+        plt.cla()
+        plt.close()
         metrics2 = get_predetermined_metrics_cluster(real_clusters_arr, clusters_from_alg)
+        plots2 = get_predetermined_plots_classif(X_test, clusters_from_alg, project.id)
+        plt.clf()
+        plt.cla()
+        plt.close()
 
     data = {}
     data['type'] = 'train_save_metrics_graphics'
