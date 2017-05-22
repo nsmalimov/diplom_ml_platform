@@ -13,6 +13,10 @@ from app.util.funcs import ml_path
 from app.workers.metrics import get_predetermined_metrics_classif, get_predetermined_metrics_cluster
 from app.workers.plots import get_predetermined_plots_classif
 
+def regresh_plots():
+    plt.clf()
+    plt.cla()
+    plt.close()
 
 def read_data(data, project):
     X, Y = [], []
@@ -64,7 +68,7 @@ def train_model(algorithm, X, Y, project):
 
     alg = import_alg(path_to_alg)
 
-    X_train, _, Y_train, _ = train_test_split(X, Y, test_size=0.33, random_state=42)
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
     model = None
 
@@ -72,7 +76,7 @@ def train_model(algorithm, X, Y, project):
         model = alg.train(X_train, Y_train)
 
     if algorithm.type == "clustering":
-        model = alg.train(X_train)
+        model = alg.train(X_train + X_test)
 
     return model
 
@@ -119,7 +123,6 @@ def save_model(model, project, hash):
 def train_and_save_model(data, algorithm, project):
     hash = get_hash_by_data_alg(data, algorithm, project)
 
-    print (hash)
     if not (check_model_exist(hash, project)):
         X, Y = read_data(data, project)
         model = train_model(algorithm, X, Y, project)
@@ -138,7 +141,7 @@ def read_model(project, hash):
 
     return model
 
-
+# возможность предсказывать
 def predict():
     pass
 
@@ -193,7 +196,7 @@ def get_metrics_plots_from_alg_cluster(data, algorithm, project):
     hash = get_hash_by_data_alg(data, algorithm, project)
     model = read_model(project, hash)
 
-    _, X_test, _, y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+    X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
     if algorithm.preloaded:
         path_to_alg = algorithm.filename
@@ -202,7 +205,7 @@ def get_metrics_plots_from_alg_cluster(data, algorithm, project):
 
     alg = import_alg(path_to_alg)
 
-    metrics, plots = alg.test(model, X_test, y_test)
+    metrics, plots = alg.test(model, X_train + X_test, Y_train + Y_test)
 
     path_to_plots = ml_path + "project_" + str(project.id) + "/results/images/"
 
@@ -215,7 +218,7 @@ def get_metrics_plots_from_alg_cluster(data, algorithm, project):
 
     # какой-то график точно будет
     if plots is None:
-        return metrics, X_test, plots_res, y_test, clusters_from_alg
+        return metrics, X_test, plots_res, Y_test, clusters_from_alg
 
     for i in plots:
         path = path_to_plots + i + ".png"
@@ -227,7 +230,7 @@ def get_metrics_plots_from_alg_cluster(data, algorithm, project):
 
         plots_res[i] = "/imageplot/" + plots_res[i][1:]
 
-    return metrics, X_test, plots_res, y_test, clusters_from_alg
+    return metrics, X_test, plots_res, Y_test, clusters_from_alg
 
 def start_processing_func_classif(project, result_type, data, algorithm, analys_classif):
     type = result_type.name
@@ -242,14 +245,11 @@ def start_processing_func_classif(project, result_type, data, algorithm, analys_
 
         # метрики или свои на выбор или заранее заданные
         metrics1, X_test, plots1, y_real_label, y_class_predict, y_proba_predict = get_metrics_plots_from_alg_classif(data, algorithm, project)
-        plt.clf()
-        plt.cla()
-        plt.close()
         metrics2 = get_predetermined_metrics_classif(y_real_label, y_class_predict, y_proba_predict)
+        regresh_plots()
+
         plots2 = get_predetermined_plots_classif(X_test, y_class_predict, project.id)
-        plt.clf()
-        plt.cla()
-        plt.close()
+        regresh_plots()
 
     data = {}
     data['type'] = 'train_save_metrics_graphics'
@@ -281,14 +281,11 @@ def start_processing_func_cluster(project, result_type, data, algorithm, analys_
 
         # метрики или свои на выбор или заранее заданные
         metrics1, X_test, plots1, real_clusters_arr, clusters_from_alg = get_metrics_plots_from_alg_cluster(data, algorithm, project)
-        plt.clf()
-        plt.cla()
-        plt.close()
         metrics2 = get_predetermined_metrics_cluster(real_clusters_arr, clusters_from_alg)
+        regresh_plots()
+
         plots2 = get_predetermined_plots_classif(X_test, clusters_from_alg, project.id)
-        plt.clf()
-        plt.cla()
-        plt.close()
+        regresh_plots()
 
     data = {}
     data['type'] = 'train_save_metrics_graphics'
