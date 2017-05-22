@@ -18,9 +18,13 @@ X, Y = [], []
 
 #f = open("/Users/Nurislam/PycharmProjects/diplom_project_2/data/concated/commonData.csv", "r")
 
-path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
+path1 = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/"
+#path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
 
-f = open(path + "commonData.csv", "r")
+path2 = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_def"
+#path2 = "/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_def"
+
+f = open(path1 + "commonData.csv", "r")
 
 for i in f.readlines():
     s = i.replace("\n", "")
@@ -64,7 +68,9 @@ def proportional_split_test_train(X, Y):
 
     return X_train, X_test, Y_train, Y_test
 
-X_train, X_test, Y_train, Y_test = proportional_split_test_train(X, Y)
+#X_train, X_test, Y_train, Y_test = proportional_split_test_train(X, Y)
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
 def neural_model(X, y):
     X = csr_matrix(X)
@@ -104,7 +110,7 @@ def neural_model(X, y):
     return model
 
 def model_neural_test(X_test, Y_test):
-    model = load_model("/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_def")
+    model = load_model(path2)
 
     predict = model.predict(X_test)
 
@@ -128,7 +134,7 @@ def model_neural_test(X_test, Y_test):
 
 model = neural_model(X_train, Y_train)
 
-save_model(model, "/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_def")
+save_model(model, path2)
 
 model_neural_test(X_test, Y_test)
 

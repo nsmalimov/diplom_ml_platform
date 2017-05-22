@@ -17,10 +17,13 @@ np.random.seed(seed)
 X, Y = [], []
 
 #f = open("/Users/Nurislam/PycharmProjects/diplom_project_2/data/concated/commonData.csv", "r")
+path1 = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/"
+#path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
 
-path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
+path2 = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_wine"
+#path2 = "/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_wine"
 
-f = open(path + "wine.csv", "r")
+f = open(path1 + "wine.csv", "r")
 
 for i in f.readlines():
     s = i.replace("\n", "")
@@ -71,7 +74,7 @@ def neural_model_wine(X, y):
     return model
 
 def model_neural_test(X_test, Y_test):
-    model = load_model("/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_wine")
+    model = load_model(path2)
 
     predict = model.predict(X_test)
 
@@ -92,7 +95,7 @@ def model_neural_test(X_test, Y_test):
 
 model = neural_model_wine(X_train, Y_train)
 
-save_model(model, "/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_wine")
+save_model(model, path2)
 
 model_neural_test(X_test, Y_test)
 

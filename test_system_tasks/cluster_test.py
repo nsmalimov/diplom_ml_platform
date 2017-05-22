@@ -5,6 +5,7 @@ from sklearn.cluster.birch import Birch
 from sklearn.cross_validation import train_test_split
 from sklearn.cluster import MeanShift, MiniBatchKMeans
 from sklearn.cluster import DBSCAN
+from sklearn.cluster import KMeans
 import time
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 import numpy as np
@@ -95,55 +96,56 @@ from sklearn.metrics import adjusted_rand_score
 #X = iris.data
 #Y = iris.target
 
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+#X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
-Y_test = [int(i) for i in Y_test]
+Y = [int(i) for i in Y]
 
-def kmeans(X_train, X_test, Y_train, Y_test):
-    from sklearn.cluster import KMeans
-    import numpy as np
-    kmeans = KMeans(n_jobs=4).fit(X_train)
-    predicted = kmeans.predict(X_test)
-
-    #print (predicted)
-    #print (adjusted_rand_score(Y_test, predicted))
-    #print (Y_test)
-
-    #print (Y_test)
-
-    plt = plot_3d_graphics(X_test, predicted)
-    plt.show()
-
-def affinity_propagation(X_train, X_test, Y_train, Y_test):
-    ap = AffinityPropagation().fit(X_train)
-    predicted = ap.predict(X_test)
+def kmeans(X, Y):
+    kmeans = KMeans(n_jobs=4).fit(X)
+    predicted = kmeans.predict(X)
 
     print (predicted)
 
-    print (adjusted_rand_score(Y_test, predicted))
+    print (adjusted_rand_score(Y, predicted))
 
-def birch(X_train, X_test, Y_train, Y_test):
-    brc = Birch().fit(X_train)
-    predicted = brc.predict(X_test)
+    #print (Y_test)
 
-    print (adjusted_rand_score(Y_test, predicted))
+    #print (Y_test)
 
-def mean_shift(X_train, X_test, Y_train, Y_test):
-    ms = MeanShift(n_jobs=4).fit(X_train)
-    predicted = ms.predict(X_test)
+    #plt = plot_3d_graphics(X_test, predicted)
+    #plt.show()
+
+# def affinity_propagation(X_train, X_test, Y_train, Y_test):
+#     ap = AffinityPropagation().fit(X_train)
+#     predicted = ap.predict(X_test)
+#
+#     print (predicted)
+#
+#     print (adjusted_rand_score(Y_test, predicted))
+
+def birch(X, Y):
+    brc = Birch().fit(X)
+    predicted = brc.predict(X)
 
     print(predicted)
 
-    print(adjusted_rand_score(Y_test, predicted))
+    print (adjusted_rand_score(Y, predicted))
 
-def mini_batch_kmeans(X_train, X_test, Y_train, Y_test):
-    mbk = MiniBatchKMeans().fit(X_train)
+# def mean_shift(X_train, X_test, Y_train, Y_test):
+#     ms = MeanShift(n_jobs=4).fit(X_train)
+#     predicted = ms.predict(X_test)
+#
+#     print(predicted)
+#
+#     print(adjusted_rand_score(Y_test, predicted))
 
-    predicted = mbk.fit_predict(X_test)
+def mini_batch_kmeans(X, Y):
+    mbk = MiniBatchKMeans().fit(X)
+    predicted = mbk.fit_predict(X)
 
     print (predicted)
 
-    print(adjusted_rand_score(Y_test, predicted))
+    print(adjusted_rand_score(Y, predicted))
 
 import multiprocessing
 
@@ -152,7 +154,7 @@ num_cpu = multiprocessing.cpu_count()
 print (num_cpu)
 
 start_time = time.time()
-kmeans(X_train, X_test, Y_train, Y_test)
+kmeans(X, Y)
 print("--- %s seconds ---" % (time.time() - start_time))
 
 #import numpy as np
@@ -166,9 +168,9 @@ print("--- %s seconds ---" % (time.time() - start_time))
 
 #plt.show()
 
-# start_time = time.time()
-# birch(X_train, X_test, Y_train, Y_test)
-# print("--- %s seconds ---" % (time.time() - start_time))
+start_time = time.time()
+birch(X, Y)
+print("--- %s seconds ---" % (time.time() - start_time))
 #
 # start_time = time.time()
 # affinity_propagation(X_train, X_test, Y_train, Y_test)
@@ -178,9 +180,9 @@ print("--- %s seconds ---" % (time.time() - start_time))
 # mean_shift(X_train, X_test, Y_train, Y_test)
 # print("--- %s seconds ---" % (time.time() - start_time))
 #
-# start_time = time.time()
-# mini_batch_kmeans(X_train, X_test, Y_train, Y_test)
-# print("--- %s seconds ---" % (time.time() - start_time))
+start_time = time.time()
+mini_batch_kmeans(X, Y)
+print("--- %s seconds ---" % (time.time() - start_time))
 
 #\item k-means \cite{md};
 #\item Affinity Propagation \cite{md};
