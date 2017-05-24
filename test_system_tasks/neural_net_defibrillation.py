@@ -4,7 +4,6 @@ from keras.layers import Dense, Dropout
 from keras.models import Sequential, save_model, load_model
 from keras.wrappers.scikit_learn import KerasClassifier
 from scipy.sparse import csr_matrix
-from sklearn.cross_validation import train_test_split
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 import tensorflow as tf
@@ -68,9 +67,9 @@ def proportional_split_test_train(X, Y):
 
     return X_train, X_test, Y_train, Y_test
 
-#X_train, X_test, Y_train, Y_test = proportional_split_test_train(X, Y)
+X_train, X_test, Y_train, Y_test = proportional_split_test_train(X, Y)
 
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+#X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
 def neural_model(X, y):
     X = csr_matrix(X)
@@ -79,33 +78,39 @@ def neural_model(X, y):
 
     y_train_new = []
 
-    for i in y:
-        y_train_new.append(np.array([i]))
+    #for i in y:
+    #    y_train_new.append(np.array([i]))
 
-    y_train_new = np.array(y_train_new)
+    y_train_new = np.array(y)
 
     #y_train_new[y_train_new == 1] = 0
     #y_train_new[y_train_new == 2] = 1
     #y_train_new[y_train_new == 3] = 2
 
-    one_hot_labels = keras.utils.to_categorical(y_train_new, num_classes=2)
+    #one_hot_labels = keras.utils.to_categorical(y_train_new, num_classes=1)
 
     #tf.reset_default_graph()
     sess = tf.InteractiveSession()
 
     model = Sequential()
 
-    model.add(Dense(4, input_dim=X[0].shape[1], kernel_initializer='normal', activation='relu'))
-    model.add(Dense(24, kernel_initializer='normal', activation='sigmoid'))
-    model.add(Dense(12, kernel_initializer='normal', activation='sigmoid'))
-    model.add(Dense(2, kernel_initializer='normal', activation='sigmoid'))
+    model.add(Dense(15, input_dim=X[0].shape[1], kernel_initializer='normal', activation='relu'))
+    model.add(Dropout(0.2))
+    model.add(Dense(10, kernel_initializer='normal', activation='relu'))
+    model.add(Dropout(0.1))
+    #model.add(Dense(12, kernel_initializer='normal', activation='relu'))
+    #model.add(Dropout(0.1))
+    model.add(Dense(1, kernel_initializer='normal', activation='sigmoid'))
 
     model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
+                  loss='binary_crossentropy',
                   metrics=['accuracy'])
 
     print ("start fit")
-    model.fit(X.todense(), one_hot_labels, epochs=30, batch_size=5)
+
+    print (y_train_new)
+    #exit()
+    model.fit(X.todense(), y_train_new, epochs=30, batch_size=5)
 
     return model
 
@@ -117,9 +122,9 @@ def model_neural_test(X_test, Y_test):
     res_arr = []
 
     for i in predict:
-        print (i)
-        max_index = i.tolist().index(max(i))
-        res_arr.append(max_index + 1)
+        #print (i)
+        #max_index = i.tolist().index(max(i))
+        res_arr.append(round(i[0]))
 
     mean_score = 0
 
