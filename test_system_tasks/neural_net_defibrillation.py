@@ -4,6 +4,7 @@ from keras.layers import Dense, Dropout
 from keras.models import Sequential, save_model, load_model
 from keras.wrappers.scikit_learn import KerasClassifier
 from scipy.sparse import csr_matrix
+from sklearn.cross_validation import train_test_split
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 import tensorflow as tf
@@ -17,10 +18,10 @@ X, Y = [], []
 
 #f = open("/Users/Nurislam/PycharmProjects/diplom_project_2/data/concated/commonData.csv", "r")
 
-path1 = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/"
+path1 = "/Users/Nurislam/Documents/ml_analysis_ws/test/data/"
 #path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
 
-path2 = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_def"
+path2 = "/Users/Nurislam/Documents/ml_analysis_ws/test_system_tasks/neural_model_def"
 #path2 = "/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_def"
 
 f = open(path1 + "commonData.csv", "r")
@@ -67,9 +68,9 @@ def proportional_split_test_train(X, Y):
 
     return X_train, X_test, Y_train, Y_test
 
-X_train, X_test, Y_train, Y_test = proportional_split_test_train(X, Y)
+#X_train, X_test, Y_train, Y_test = proportional_split_test_train(X, Y)
 
-#X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
 def neural_model(X, y):
     X = csr_matrix(X)
@@ -145,8 +146,10 @@ model_neural_test(X_test, Y_test)
 
 #model = baseline_model()
 
-#from keras.utils import plot_model
-#plot_model(model, to_file='/Users/Nurislam/PycharmProjects/diplom_project_2/model.png')
+from keras.utils import plot_model
+
+print ("start plot")
+plot_model(model, to_file='/Users/Nurislam/Documents/ml_analysis_ws/model.png')
 
 #kfold = KFold(n_splits=10, shuffle=True, random_state=seed)
 

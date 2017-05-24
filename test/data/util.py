@@ -1,4 +1,4 @@
-# path = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/"
+# path = "/Users/Nurislam/Documents/ml_analysis_ws/diplom_ml_platform/test/data/"
 #
 # X, Y = [], []
 #

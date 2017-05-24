@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import keras
 import numpy as np
 from keras.layers import Dense, Dropout
@@ -17,10 +19,10 @@ np.random.seed(seed)
 X, Y = [], []
 
 #f = open("/Users/Nurislam/PycharmProjects/diplom_project_2/data/concated/commonData.csv", "r")
-path1 = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/"
+path1 = "/Users/Nurislam/Documents/ml_analysis_ws/test/data/"
 #path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
 
-path2 = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_wine"
+path2 = "/Users/Nurislam/Documents/ml_analysis_ws/test_system_tasks/neural_model_wine"
 #path2 = "/home/nur/PycharmProjects/diplom_ml_platform/test_system_tasks/neural_model_wine"
 
 f = open(path1 + "wine.csv", "r")
@@ -34,7 +36,40 @@ for i in f.readlines():
 
 f.close()
 
+def proportional_split_test_train(X, Y):
+    X_train, X_test, Y_train, Y_test = [], [], [], []
+
+    split_num = 0.33
+    each_elem_count = {}
+    need_each_count = {}
+
+    for i in Y:
+        if not(i in each_elem_count):
+            each_elem_count[i] = 1
+            need_each_count[i] = 0
+        else:
+            each_elem_count[i] += 1
+
+    for i in each_elem_count:
+        need_each_count[i] = int(each_elem_count[i] * split_num)
+
+    for i in range(len(X)):
+        label = Y[i]
+        elem = X[i]
+
+        if need_each_count[label] >= 0:
+            X_test.append(elem)
+            Y_test.append(label)
+            need_each_count[label] -= 1
+        else:
+            X_train.append(elem)
+            Y_train.append(label)
+
+    return X_train, X_test, Y_train, Y_test
+
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+
+#X_train, X_test, Y_train, Y_test = proportional_split_test_train(X, Y)
 
 def neural_model_wine(X, y):
     X = csr_matrix(X)
@@ -59,14 +94,26 @@ def neural_model_wine(X, y):
 
     model = Sequential()
 
-    model.add(Dense(4, input_dim=X[0].shape[1], kernel_initializer='normal', activation='relu'))
-    model.add(Dense(24, kernel_initializer='normal', activation='sigmoid'))
-    model.add(Dense(12, kernel_initializer='normal', activation='sigmoid'))
+    # model.add(Dense(4, input_dim=X[0].shape[1], kernel_initializer='normal', activation='relu'))
+    # model.add(Dense(24, kernel_initializer='normal', activation='sigmoid'))
+    # model.add(Dense(12, kernel_initializer='normal', activation='sigmoid'))
+    # model.add(Dense(3, kernel_initializer='normal', activation='sigmoid'))
+    #
+    # model.compile(optimizer='adam',
+    #               loss='categorical_crossentropy',
+    #               metrics=['accuracy'])
+
+    model.add(Dense(15, input_dim=X[0].shape[1], kernel_initializer='normal', activation='relu'))
+    model.add(Dropout(0.2))
+    model.add(Dense(10, kernel_initializer='normal', activation='relu'))
+    model.add(Dropout(0.1))
+    #model.add(Dense(12, kernel_initializer='normal', activation='relu'))
+    #model.add(Dropout(0.1))
     model.add(Dense(3, kernel_initializer='normal', activation='sigmoid'))
 
     model.compile(optimizer='adam',
-                  loss='categorical_crossentropy',
-                  metrics=['accuracy'])
+                   loss='categorical_crossentropy',
+                   metrics=['accuracy'])
 
     print ("start fit")
     model.fit(X.todense(), one_hot_labels, epochs=30, batch_size=5)

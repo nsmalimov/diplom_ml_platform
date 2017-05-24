@@ -1,9 +1,10 @@
 from sklearn.cross_validation import train_test_split
 
-path = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/"
-#path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
+path = "/Users/Nurislam/Documents/ml_analysis_ws/test/data/"
+#path = "/Users/Nurislam/Documents/ml_analysis_ws/test/data/"
 
 filename = "commonData.csv"
+#filename = "wine.csv"
 
 def prepare_data():
     data = []
@@ -49,24 +50,24 @@ def mean_score(y_true, y_pred):
     return mean_score
 
 
-import ml_data.common_algorithms.classification.random_forest
-
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
-
-model = ml_data.common_algorithms.classification.random_forest.train(X_train, Y_train)
-print (model.score(X_test, Y_test))
-
-import ml_data.common_algorithms.classification.log_reg
-
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
-model1 = ml_data.common_algorithms.classification.log_reg.train(X_train, Y_train)
-print (model1.score(X_test, Y_test))
-
-import ml_data.common_algorithms.classification.svm
-
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
-model2 = ml_data.common_algorithms.classification.svm.train(X_train, Y_train)
-print (model2.score(X_test, Y_test))
+# import ml_data.common_algorithms.classification.random_forest
+#
+# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+#
+# model = ml_data.common_algorithms.classification.random_forest.train(X_train, Y_train)
+# print (model.score(X_test, Y_test))
+#
+# import ml_data.common_algorithms.classification.log_reg
+#
+# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+# model1 = ml_data.common_algorithms.classification.log_reg.train(X_train, Y_train)
+# print (model1.score(X_test, Y_test))
+#
+# import ml_data.common_algorithms.classification.svm
+#
+# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+# model2 = ml_data.common_algorithms.classification.svm.train(X_train, Y_train)
+# print (model2.score(X_test, Y_test))
 
 import test.data.random_algorithm
 

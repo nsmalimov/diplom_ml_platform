@@ -1,17 +1,13 @@
-from sklearn import datasets
-
-from sklearn.cluster.affinity_propagation_ import AffinityPropagation
-from sklearn.cluster.birch import Birch
-from sklearn.cross_validation import train_test_split
-from sklearn.cluster import MeanShift, MiniBatchKMeans
-from sklearn.cluster import DBSCAN
-from sklearn.cluster import KMeans
 import time
-from mpl_toolkits.mplot3d.axes3d import Axes3D
-import numpy as np
 
-path = "/Users/Nurislam/PycharmProjects/diplom_ml_platform/test/data/"
-#path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
+import numpy as np
+from mpl_toolkits.mplot3d.axes3d import Axes3D
+from sklearn.cluster import KMeans
+from sklearn.cluster import MiniBatchKMeans
+from sklearn.cluster.birch import Birch
+
+path = "/Users/Nurislam/Documents/ml_analysis_ws/test/data/"
+#path = "/home/nur/PycharmProjects/ml_analysis_ws/test/data/"
 
 def prepare_data():
     data = []
@@ -108,6 +104,8 @@ def kmeans(X, Y):
 
     print (adjusted_rand_score(Y, predicted))
 
+    return predicted
+
     #print (Y_test)
 
     #print (Y_test)
@@ -131,6 +129,8 @@ def birch(X, Y):
 
     print (adjusted_rand_score(Y, predicted))
 
+    return predicted
+
 # def mean_shift(X_train, X_test, Y_train, Y_test):
 #     ms = MeanShift(n_jobs=4).fit(X_train)
 #     predicted = ms.predict(X_test)
@@ -147,6 +147,35 @@ def mini_batch_kmeans(X, Y):
 
     print(adjusted_rand_score(Y, predicted))
 
+    return predicted
+
+def get_count(pred_y, real_y):
+
+    num_correct = 0
+
+    for i in range(len(pred_y)):
+        if (pred_y[i] == real_y[i]):
+            num_correct += 1
+
+    print (num_correct)
+    print (len(real_y))
+    print (num_correct / (len(real_y) + 0.0))
+
+def get_count_in_one_cluster(pred_y, real_y):
+    dict_in_one_pred = {}
+    dict_in_one_real = {}
+
+    num_correct = 0
+
+    for i in range(len(pred_y)):
+        if (pred_y[i] == real_y[i]):
+            num_correct += 1
+
+    print (num_correct)
+    print (len(real_y))
+    print (num_correct / (len(real_y) + 0.0))
+
+
 import multiprocessing
 
 num_cpu = multiprocessing.cpu_count()
@@ -154,8 +183,11 @@ num_cpu = multiprocessing.cpu_count()
 print (num_cpu)
 
 start_time = time.time()
-kmeans(X, Y)
+predicted = kmeans(X, Y)
+get_count(predicted, Y)
 print("--- %s seconds ---" % (time.time() - start_time))
+
+#exit()
 
 #import numpy as np
 
@@ -170,6 +202,7 @@ print("--- %s seconds ---" % (time.time() - start_time))
 
 start_time = time.time()
 birch(X, Y)
+get_count(predicted, Y)
 print("--- %s seconds ---" % (time.time() - start_time))
 #
 # start_time = time.time()
@@ -182,6 +215,7 @@ print("--- %s seconds ---" % (time.time() - start_time))
 #
 start_time = time.time()
 mini_batch_kmeans(X, Y)
+get_count(predicted, Y)
 print("--- %s seconds ---" % (time.time() - start_time))
 
 #\item k-means \cite{md};
