@@ -5,22 +5,29 @@ myApp.controller("dataController", ['$scope', 'ModalService', '$http', function 
 
     $scope.selectedProject = null;
 
+    $scope.selectedTaskType = null;
+
     $scope.allRecordsByProjectId = null;
 
     $scope.project_id = null;
 
     $scope.file = null;
 
+    $scope.fd = new FormData();
+
+    $scope.taskTypes = [{name: 'classification', title: 'Классификация'},
+        {name: 'clustering', title: 'Кластеризация'},
+        {name: 'universal', title: 'Универсальный тип'}];
+
     $scope.readFile = function (event) {
         var files = event.files;
-        var fd = new FormData();
-        fd.append("file", files[0]);
-
-        $scope.file = fd;
+        $scope.fd.append("file", files[0]);
     };
 
     $scope.uploadFile = function () {
-        $http.post(baseUrl + urlsList.data.upload_one + "/" + $scope.project_id, $scope.file, {
+        $scope.fd.append("task_type", $scope.selectedTaskType);
+
+        $http.post(baseUrl + urlsList.data.upload_one + "/" + $scope.project_id, $scope.fd, {
             withCredentials: true,
             headers: {'Content-Type': undefined},
             transformRequest: angular.identity
@@ -66,11 +73,30 @@ myApp.controller("dataController", ['$scope', 'ModalService', '$http', function 
         })
     };
 
+    $scope.loadAllDataByProjectIdAndTaskType = function (project_id, taskType) {
+        $scope.allRecordsByProjectId = [];
+        $http({
+            method: 'POST',
+            dataType: 'json',
+            url: urlsList.data.load_all_by_project_and_task_type,
+            data: JSON.stringify({project_id: project_id, task_type: taskType}),
+            contentType: 'application/json'
+        }).then(function successCallback(response) {
+            $scope.allRecordsByProjectId = response.data;
+        }, function errorCallback(response) {
+        })
+    };
+
     $scope.loadAllProjects();
 
-    $scope.onSelectUiClick = function (project_id) {
+    $scope.onSelectUiClick1 = function (project_id) {
         $scope.project_id = project_id;
         $scope.loadAllDataByProjectId(project_id);
+    };
+
+    $scope.onSelectUiClick2 = function (project_id, taskType) {
+        $scope.selectedTaskType = taskType.name;
+        $scope.loadAllDataByProjectIdAndTaskType(project_id, $scope.selectedTaskType);
     };
 
     $scope.showDescriptionModal = function () {
@@ -84,7 +110,7 @@ myApp.controller("dataController", ['$scope', 'ModalService', '$http', function 
         });
     };
 
-    $scope.deleteObject = function(item) {
+    $scope.deleteObject = function (item) {
         item.object_type = "data";
         $http({
             method: 'POST',

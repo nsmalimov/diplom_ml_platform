@@ -58,13 +58,13 @@ myApp.controller("analysClassifController", function ($scope, $http) {
         }
     };
 
-    $scope.loadAllAlgorithmsByProjectId = function (project_id) {
+    $scope.loadAllAlgorithmsByProjectIdAndDataType = function (project_id, task_type) {
         if (project_id) {
             $http({
                 method: 'POST',
                 dataType: 'json',
-                url: urlsList.algorithm.load_all_by_project,
-                data: JSON.stringify({project_id: project_id}),
+                url: urlsList.algorithm.load_manual_by_project,
+                data: JSON.stringify({project_id: project_id, type: task_type}),
                 contentType: 'application/json'
             }).then(function successCallback(response) {
                 $scope.allAlgorithmsByProjectId = response.data;

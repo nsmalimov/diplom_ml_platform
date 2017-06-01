@@ -67,6 +67,9 @@ class Data(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(80), nullable=False)
 
+    # classification clustering universal
+    task_type = db.Column(db.String(80), nullable=False)
+
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=True, default=None)
 
     @property
@@ -75,11 +78,13 @@ class Data(db.Model):
         return {
             'id': self.id,
             'filename': self.filename,
-            'project_id': self.project_id
+            'project_id': self.project_id,
+            'task_type': self.task_type
         }
 
-    def __init__(self, filename):
+    def __init__(self, filename, task_type):
         self.filename = filename
+        self.task_type = task_type
 
     def __repr__(self):
         return '<Data %r>' % self.id
@@ -97,6 +102,9 @@ class Algorithm(db.Model):
     preloaded = db.Column(db.Boolean, default=False, nullable=False)
     type = db.Column(db.String(80))
 
+    # keras fe
+    custom_save_model = db.Column(db.Boolean, default=False, nullable=False)
+
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=True, default=None)
 
     @property
@@ -109,15 +117,17 @@ class Algorithm(db.Model):
             'preloaded': self.preloaded,
             'project_id': self.project_id,
             'filename': self.filename,
-            'type': self.type
+            'type': self.type,
+            'custom_save_model': self.custom_save_model
         }
 
-    def __init__(self, title, description, preloaded, filename, type):
+    def __init__(self, title, description, preloaded, filename, type, custom_save_model):
         self.title = title
         self.description = description
         self.preloaded = preloaded
         self.filename = filename
         self.type = type
+        self.custom_save_model = custom_save_model
 
     def __repr__(self):
         return '<Algorithm %r>' % self.id
@@ -199,14 +209,14 @@ def insert_common_algs_to_db():
         res = Algorithm.query.filter_by(title=i).first()
         type = "classification"
         if (res == None):
-            algorithm = Algorithm(i, "scikit " + i, True, path + "/" + type + "/" + i + ".py", type)
+            algorithm = Algorithm(i, "scikit " + i, True, path + "/" + type + "/" + i + ".py", type, False)
             db.session.add(algorithm)
 
     for i in alg_names_clustering:
         res = Algorithm.query.filter_by(title=i).first()
         type = "clustering"
         if (res == None):
-            algorithm = Algorithm(i, "scikit " + i, True, path + "/" + type + "/" + i + ".py", type)
+            algorithm = Algorithm(i, "scikit " + i, True, path + "/" + type + "/" + i + ".py", type, False)
             db.session.add(algorithm)
 
     db.session.commit()
@@ -229,7 +239,6 @@ def insert_result_types_to_db():
             db.session.add(resultType)
 
     db.session.commit()
-
 
 insert_common_algs_to_db()
 insert_result_types_to_db()

@@ -70,10 +70,16 @@
                                ng-model="projectObject.title">
                         <p>Описание</p>
                         <input type="text" class="form-control" ng-model="projectObject.description">
-                        <div style="margin-top: 70px">
+                        <div style="margin-top: 50px" class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="projectObject.customSaveModel">
+                                Собственная функция сохранения модели
+                            </label>
+                        </div>
                             <input id="file-input" type="file" name="file"
                                    onchange="angular.element(this).scope().readFile(this)"/>
                         </div>
+                        <div>[[projectObject.customSaveModel]]</div>
                         <button type="button" class="btn btn-default" ng-click="uploadFile()" style="margin-top: 20px">
                             Загрузить
                         </button>

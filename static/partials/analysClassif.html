@@ -39,7 +39,8 @@
                     <div class="row rectangle">
                         <div class="col-md-6">
                             <div id="ebay_rect"
-                                 ng-click="ctrl.selectType='algorithms';loadAllAlgorithmsByProjectId(ctrl.selectedObjects.selectedProject.id)">
+                                 ng-click="ctrl.selectType='algorithms';loadAllAlgorithmsByProjectIdAndDataType(ctrl.selectedObjects.selectedProject.id,
+                                  ctrl.selectedObjects.selectedRecord.task_type)">
                                 <div id="kid">
                                     <p ng-style="styleAlgorithms" id="kid_p">Алгоритмы</p>
                                 </div>

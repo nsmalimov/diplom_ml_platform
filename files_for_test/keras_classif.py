@@ -1,20 +1,58 @@
-import random
+import keras
+from keras.models import Sequential
+import tensorflow as tf
+from scipy.sparse.csr import csr_matrix
+import numpy as np
 
+class NeuralClassifier():
+    def neural_model_wine(X, y):
+        X = csr_matrix(X)
 
-class RandomClassifier():
-    def __init__(self, num_classes=2, start_num=0):
-        self.num_classes = num_classes - 1
-        self.start_num = start_num
+        y = [int(i) for i in y]
 
-    def fit(self, X, Y):
-        pass
+        y_train_new = []
 
-    def predict(self, X):
-        lst = [i for i in range(int(self.start_num), int(self.num_classes) + 1)]
-        return random.choice(lst)
+        for i in y:
+            y_train_new.append(np.array([i]))
 
-    def predict_proba(self):
-        pass
+        y_train_new = np.array(y_train_new)
+
+        y_train_new[y_train_new == 1] = 0
+        y_train_new[y_train_new == 2] = 1
+        y_train_new[y_train_new == 3] = 2
+
+        one_hot_labels = keras.utils.to_categorical(y_train_new, num_classes=3)
+
+        # tf.reset_default_graph()
+        sess = tf.InteractiveSession()
+
+        model = Sequential()
+
+        # model.add(Dense(4, input_dim=X[0].shape[1], kernel_initializer='normal', activation='relu'))
+        # model.add(Dense(24, kernel_initializer='normal', activation='sigmoid'))
+        # model.add(Dense(12, kernel_initializer='normal', activation='sigmoid'))
+        # model.add(Dense(3, kernel_initializer='normal', activation='sigmoid'))
+        #
+        # model.compile(optimizer='adam',
+        #               loss='categorical_crossentropy',
+        #               metrics=['accuracy'])
+
+        model.add(Dense(15, input_dim=X[0].shape[1], kernel_initializer='normal', activation='relu'))
+        model.add(Dropout(0.2))
+        model.add(Dense(10, kernel_initializer='normal', activation='relu'))
+        model.add(Dropout(0.1))
+        # model.add(Dense(12, kernel_initializer='normal', activation='relu'))
+        # model.add(Dropout(0.1))
+        model.add(Dense(3, kernel_initializer='normal', activation='sigmoid'))
+
+        model.compile(optimizer='adam',
+                      loss='categorical_crossentropy',
+                      metrics=['accuracy'])
+
+        print("start fit")
+        model.fit(X.todense(), one_hot_labels, epochs=30, batch_size=5)
+
+        return model
 
 
 def train(X, Y):

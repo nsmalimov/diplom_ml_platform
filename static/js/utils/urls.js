@@ -5,7 +5,8 @@ var urlsList = {
         upload_one: "data_upload",
         load_all: "data_load_all",
         load_all_by_project: "data_load_all_by_project",
-        delete: "delete_object"
+        delete: "delete_object",
+        load_all_by_project_and_task_type: "data_load_all_by_project_and_task_type"
     },
 
     project: {

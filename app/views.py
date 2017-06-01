@@ -26,12 +26,18 @@ def serve_partial(path):
 @app.route('/data_upload/<project_id>', methods=['GET', 'POST'])
 def upload_data(project_id):
     if request.method == 'POST':
+        task_type = request.form.get('task_type')
+
+        print(task_type)
         file = request.files['file']
+
+        print(file)
+
         filename = secure_filename(file.filename)
 
         save_file(file, filename, project_id, "data")
 
-        data = Data(filename)
+        data = Data(filename, task_type)
 
         db.session.add(data)
         db.session.commit()
@@ -51,12 +57,13 @@ def upload_algorithm(project_id):
         description = request.form.get('description')
         type = request.form.get('type')
         file = request.files['file']
+        custom_save_model = request.form.get('custom_save_model')
 
         filename = secure_filename(file.filename)
 
         save_file(file, filename, project_id, "algorithms")
 
-        algorithm = Algorithm(title, description, False, filename, type)
+        algorithm = Algorithm(title, description, False, filename, type, custom_save_model)
 
         db.session.add(algorithm)
         db.session.commit()
@@ -121,6 +128,18 @@ def load_all_data_by_project():
     return make_response(json.dumps([i.serialize for i in all_data_by_project]))
 
 
+@app.route('/data_load_all_by_project_and_task_type', methods=['POST'])
+def load_all_data_by_project_and_task_type():
+    jsonData = request.get_json()
+    project_id = jsonData["project_id"]
+    task_type = jsonData["task_type"]
+
+    all_data_by_project_and_task_type = Data.query.filter(Data.project_id == project_id,
+                                                          Data.task_type == task_type).all()
+
+    return make_response(json.dumps([i.serialize for i in all_data_by_project_and_task_type]))
+
+
 @app.route('/algorithm_load_manual_by_project', methods=['POST'])
 def load_manual_algorithms_by_project():
     jsonData = request.get_json()
@@ -130,19 +149,37 @@ def load_manual_algorithms_by_project():
 
     return make_response(json.dumps([i.serialize for i in all_algorithms_by_project]))
 
+
 @app.route('/algorithm_load_all_by_project_by_type', methods=['POST'])
 def load_all_algorithms_by_project_by_type():
     jsonData = request.get_json()
     project_id = jsonData["project_id"]
     taskType = jsonData["type"]
 
-    all_algorithms_by_project = Algorithm.query.filter(Algorithm.project_id == project_id, Algorithm.type == taskType).all()
+    # TODO
+    # переписать участок
+    if taskType == "universal":
+        all_algorithms_by_project1 = Algorithm.query.filter(Algorithm.project_id == project_id,
+                                                           Algorithm.type == "clustering").all()
+        all_algorithms_by_project2 = Algorithm.query.filter(Algorithm.project_id == project_id,
+                                                            Algorithm.type == "classification").all()
 
-    common_algorithms = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == taskType).all()
+        common_algorithms1 = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == "clustering").all()
+        common_algorithms2 = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == "classification").all()
+
+        common_algorithms = common_algorithms1 + common_algorithms2
+
+        all_algorithms_by_project = all_algorithms_by_project1 + all_algorithms_by_project2
+    else:
+        all_algorithms_by_project = Algorithm.query.filter(Algorithm.project_id == project_id,
+                                                           Algorithm.type == taskType).all()
+
+        common_algorithms = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == taskType).all()
 
     all_algorithms_by_project += common_algorithms
 
     return make_response(json.dumps([i.serialize for i in all_algorithms_by_project]))
+
 
 @app.route('/algorithm_load_all_by_project', methods=['POST'])
 def load_all_algorithms_by_project():
@@ -156,6 +193,7 @@ def load_all_algorithms_by_project():
     all_algorithms_by_project += common_algorithms
 
     return make_response(json.dumps([i.serialize for i in all_algorithms_by_project]))
+
 
 @app.route('/delete_object', methods=['POST'])
 def delete_object():

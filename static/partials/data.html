@@ -11,7 +11,8 @@
             </div>
             <div class="row voffset">
                 <ui-select ng-model="ctrl.selectedProject" theme="select2" style="min-width: 300px;"
-                           title="Выберите проект" ng-change="onSelectUiClick(ctrl.selectedProject.id)">
+                           title="Выберите проект"
+                           ng-change="ctrl.selectedTaskType=null;onSelectUiClick1(ctrl.selectedProject.id)">
                     <ui-select-match placeholder="Select a project">
                         [[$select.selected.title]]
                     </ui-select-match>
@@ -25,8 +26,26 @@
                     </ui-select-choices>
                 </ui-select>
             </div>
+            <div class="row voffset" ng-if="ctrl.selectedProject.id">
+                <ui-select ng-model="ctrl.selectedTaskType" theme="select2" style="min-width: 300px;"
+                           title="Выберите тип задачи" ng-change="onSelectUiClick2(ctrl.selectedProject.id, ctrl.selectedTaskType)">
+                    <ui-select-match placeholder="Select a task type">
+                        [[$select.selected.title]]
+                    </ui-select-match>
+                    <ui-select-choices
+                            repeat="item in taskTypes | propsFilter: {title: $select.search}">
+                        <div ng-bind-html="item.title | highlight: $select.search"></div>
+                        <small>
+                            title: [[item.title]]
+                        </small>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
             <div class="row voffset">
-                <input id="file-input" type="file" name="file" onchange="angular.element(this).scope().readFile(this)"/>
+                <div>
+                    <input id="file-input" type="file" name="file"
+                           onchange="angular.element(this).scope().readFile(this)"/>
+                </div>
                 <button type="button" class="btn btn-default" ng-click="uploadFile()" style="margin-top: 20px">
                     Загрузить
                 </button>
@@ -51,6 +70,7 @@
                                         <div style="padding:20px" id="demo-right">
                                             <div class="row voffset">
                                                 <p>[[selectedItem.filename]]</p>
+                                                <p>[[selectedItem.task_type]]</p>
                                             </div>
                                             <div class="row voffset">
                                                 <button type="button" class="btn btn-default"
@@ -61,7 +81,8 @@
                                             <div class="row voffset">
                                                 <a target="_self"
                                                    href="/object/[[selectedItem.project_id]]/data/[[selectedItem.filename]]"
-                                                   download="[[selectedItem.filename]]" class="btn btn-info" role="button">Скачать</a>
+                                                   download="[[selectedItem.filename]]" class="btn btn-info"
+                                                   role="button">Скачать</a>
                                             </div>
                                             <div class="row voffset">
                                                 <a ng-click="toggle(null)" class="button">Close</a>
