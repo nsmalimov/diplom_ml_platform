@@ -5,8 +5,6 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
 
     $scope.selectedAlgorithm = null;
 
-    //$scope.selectedProject = null;
-
     $scope.allAlgorithmsByProjectId = null;
 
     $scope.project_id = null;
@@ -30,34 +28,6 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
         title: null,
         description: null,
         type: null
-    };
-
-    $scope.reset = function () {
-        $scope.selectedProject = null;
-
-        $scope.selectedAlgorithm = null;
-
-        $scope.allAlgorithmsByProjectId = null;
-
-        $scope.project_id = null;
-
-        $scope.fd = new FormData();
-
-        $scope.commonAlgorithmsFlag = false;
-
-        $scope.commonAlgorithms = null;
-
-        $scope.commonAlgorithmsTitles = [];
-
-        $scope.strButtonCheckCommonAlgorithmsFlag = "Показать стандартные";
-
-        $scope.commonAlgorithmsTitles = [];
-
-        $scope.projectObject = {
-            title: null,
-            description: null,
-            type: null
-        };
     };
 
     $scope.readFile = function (event) {
@@ -101,7 +71,6 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
             contentType: 'application/json'
         }).then(function successCallback(response) {
             $scope.allAlgorithmsByProjectId = response.data;
-            console.log($scope.allAlgorithmsByProjectId);
         }, function errorCallback(response) {
         })
     };
@@ -122,9 +91,9 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
     $scope.loadAllProjects();
 
     $scope.taskTypeChange = function (selectedTaskType) {
-        //$scope.reset();
         $scope.selectedTaskType = selectedTaskType;
         $scope.loadAllCommonAlgorithms();
+        $scope.projectObject.type = selectedTaskType.name;
 
         if ($scope.project_id) {
             $scope.loadAllAlgorithmsByProjectId($scope.project_id);

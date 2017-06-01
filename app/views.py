@@ -49,10 +49,11 @@ def upload_algorithm(project_id):
     if request.method == 'POST':
         title = request.form.get('title')
         description = request.form.get('description')
+        type = request.form.get('type')
         file = request.files['file']
-        type = request.files['type']
 
         filename = secure_filename(file.filename)
+
         save_file(file, filename, project_id, "algorithms")
 
         algorithm = Algorithm(title, description, False, filename, type)
