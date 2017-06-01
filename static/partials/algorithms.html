@@ -89,20 +89,20 @@
                                                 class="img-responsive">
                                         <h2>[[item.title]]</h2>
                                         <p>[[item.description]]</p>
-                                        <a class="btn btn-primary" ng-click="toggle()">Подробнее</a>
+                                        <a class="btn btn-primary" ng-click="toggle(item)">Подробнее</a>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div>
-                                        <div pageslide ps-open="checked" style="margin-top: 40px">
+                                        <div pageslide ps-open="checked == true" style="margin-top: 40px">
                                             <div style="padding:20px" id="demo-right">
                                                 <div class="row voffset">
                                                     <p>[[selectedItem.title]]</p>
                                                     <p>[[selectedItem.description]]</p>
-                                                    <p>[[selectedItem.filename]]</p>
-                                                    <p>[[selectedItem.preloaded]]</p>
+                                                    <p>Filepath: [[selectedItem.filename]]</p>
+                                                    <p>Preloaded: [[selectedItem.preloaded]]</p>
                                                 </div>
-                                                <div class="row voffset">
+                                                <div class="row voffset" ng-if="!selectedItem.preloaded">
                                                     <button type="button" class="btn btn-default"
                                                             ng-click="deleteObject(selectedItem)">
                                                         Удалить
@@ -110,7 +110,7 @@
                                                 </div>
                                                 <div class="row voffset">
                                                     <a target="_self"
-                                                       href="/object/[[selectedItem.project_id]]/algorithms/[[selectedItem.filename]]"
+                                                       href="/object/[[selectedItem.project_id]]algorithms[[selectedItem.filename]]"
                                                        download="[[selectedItem.filename]]" class="btn btn-info"
                                                        role="button">Скачать</a>
                                                 </div>

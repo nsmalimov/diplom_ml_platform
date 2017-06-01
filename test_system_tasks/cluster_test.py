@@ -4,7 +4,9 @@ import numpy as np
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 from sklearn.cluster import KMeans
 from sklearn.cluster import MiniBatchKMeans
+from sklearn.cluster.affinity_propagation_ import AffinityPropagation
 from sklearn.cluster.birch import Birch
+from sklearn.cluster.mean_shift_ import MeanShift
 
 path = "/Users/Nurislam/Documents/ml_analysis_ws/test/data/"
 #path = "/home/nur/PycharmProjects/ml_analysis_ws/test/data/"
@@ -113,13 +115,15 @@ def kmeans(X, Y):
     #plt = plot_3d_graphics(X_test, predicted)
     #plt.show()
 
-# def affinity_propagation(X_train, X_test, Y_train, Y_test):
-#     ap = AffinityPropagation().fit(X_train)
-#     predicted = ap.predict(X_test)
-#
-#     print (predicted)
-#
-#     print (adjusted_rand_score(Y_test, predicted))
+def affinity_propagation(X, Y):
+    ap = AffinityPropagation().fit(X)
+    predicted = ap.predict(X)
+
+    print (predicted)
+
+    print (adjusted_rand_score(Y, predicted))
+
+    return predicted
 
 def birch(X, Y):
     brc = Birch().fit(X)
@@ -131,13 +135,13 @@ def birch(X, Y):
 
     return predicted
 
-# def mean_shift(X_train, X_test, Y_train, Y_test):
-#     ms = MeanShift(n_jobs=4).fit(X_train)
-#     predicted = ms.predict(X_test)
-#
-#     print(predicted)
-#
-#     print(adjusted_rand_score(Y_test, predicted))
+def mean_shift(X, Y):
+    ms = MeanShift(n_jobs=4).fit(X)
+    predicted = ms.predict(X)
+
+    print(predicted)
+
+    print(adjusted_rand_score(Y, predicted))
 
 def mini_batch_kmeans(X, Y):
     mbk = MiniBatchKMeans().fit(X)
@@ -183,9 +187,11 @@ num_cpu = multiprocessing.cpu_count()
 print (num_cpu)
 
 start_time = time.time()
+print ("kmeans")
 predicted = kmeans(X, Y)
 get_count(predicted, Y)
 print("--- %s seconds ---" % (time.time() - start_time))
+print ("")
 
 #exit()
 
@@ -201,20 +207,30 @@ print("--- %s seconds ---" % (time.time() - start_time))
 #plt.show()
 
 start_time = time.time()
-birch(X, Y)
+print ("birch")
+predicted = birch(X, Y)
 get_count(predicted, Y)
 print("--- %s seconds ---" % (time.time() - start_time))
-#
-# start_time = time.time()
-# affinity_propagation(X_train, X_test, Y_train, Y_test)
-# print("--- %s seconds ---" % (time.time() - start_time))
-#
-# start_time = time.time()
-# mean_shift(X_train, X_test, Y_train, Y_test)
-# print("--- %s seconds ---" % (time.time() - start_time))
-#
+print ("")
+
 start_time = time.time()
-mini_batch_kmeans(X, Y)
+print ("affinity_propagation")
+predicted = affinity_propagation(X, Y)
+get_count(predicted, Y)
+print("--- %s seconds ---" % (time.time() - start_time))
+print ("")
+
+# long
+# start_time = time.time()
+# print ("mean_shift")
+# predicted = mean_shift(X, Y)
+# get_count(predicted, Y)
+# print("--- %s seconds ---" % (time.time() - start_time))
+# print ("")
+
+print ("mini_batch_kmeans")
+start_time = time.time()
+predicted = mini_batch_kmeans(X, Y)
 get_count(predicted, Y)
 print("--- %s seconds ---" % (time.time() - start_time))
 

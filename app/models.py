@@ -190,7 +190,7 @@ def insert_common_algs_to_db():
     path = ml_path + "common_algorithms"
     alg_names_classification = ["log_reg", "random_forest", "svm"]
 
-    alg_names_clustering = ["k_means", "affinity_propagation", "birch"]
+    alg_names_clustering = ["k_means", "mini_batch_kmeans", "birch"]
 
     # TODO
     # если не scikit

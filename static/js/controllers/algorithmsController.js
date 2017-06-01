@@ -5,6 +5,8 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
 
     $scope.selectedAlgorithm = null;
 
+    //$scope.selectedProject = null;
+
     $scope.allAlgorithmsByProjectId = null;
 
     $scope.project_id = null;
@@ -17,11 +19,7 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
 
     $scope.commonAlgorithmsTitles = [];
 
-    $scope.selectedCommonAlgorithmTitle = null;
-
     $scope.strButtonCheckCommonAlgorithmsFlag = "Показать стандартные";
-
-    $scope.selectedCommonAlgorithm = null;
 
     $scope.allTaskTypes = [{title: "Классификация", name: "classification"},
         {title: "Кластеризация", name: "clustering"}];
@@ -32,6 +30,34 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
         title: null,
         description: null,
         type: null
+    };
+
+    $scope.reset = function () {
+        $scope.selectedProject = null;
+
+        $scope.selectedAlgorithm = null;
+
+        $scope.allAlgorithmsByProjectId = null;
+
+        $scope.project_id = null;
+
+        $scope.fd = new FormData();
+
+        $scope.commonAlgorithmsFlag = false;
+
+        $scope.commonAlgorithms = null;
+
+        $scope.commonAlgorithmsTitles = [];
+
+        $scope.strButtonCheckCommonAlgorithmsFlag = "Показать стандартные";
+
+        $scope.commonAlgorithmsTitles = [];
+
+        $scope.projectObject = {
+            title: null,
+            description: null,
+            type: null
+        };
     };
 
     $scope.readFile = function (event) {
@@ -75,6 +101,7 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
             contentType: 'application/json'
         }).then(function successCallback(response) {
             $scope.allAlgorithmsByProjectId = response.data;
+            console.log($scope.allAlgorithmsByProjectId);
         }, function errorCallback(response) {
         })
     };
@@ -95,11 +122,17 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
     $scope.loadAllProjects();
 
     $scope.taskTypeChange = function (selectedTaskType) {
+        //$scope.reset();
         $scope.selectedTaskType = selectedTaskType;
         $scope.loadAllCommonAlgorithms();
+
+        if ($scope.project_id) {
+            $scope.loadAllAlgorithmsByProjectId($scope.project_id);
+        }
     };
 
     $scope.onSelectUiClick = function (project_id) {
+        $scope.allAlgorithmsByProjectId = [];
         $scope.project_id = project_id;
         $scope.loadAllAlgorithmsByProjectId(project_id);
     };
@@ -146,9 +179,16 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
     $scope.checked = false;
     $scope.size = '100px';
 
+    //Expression 'checked == true' in attribute 'psOpen'
     $scope.toggle = function (item) {
+        if ($scope.selectedItem === item || $scope.selectedItem === undefined) {
+            $scope.checked = !$scope.checked;
+        }
+        else {
+            $scope.checked = true;
+        }
+
         $scope.selectedItem = item;
-        $scope.checked = !$scope.checked
     };
 
     $scope.mockRouteChange = function () {
