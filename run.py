@@ -4,6 +4,9 @@ from werkzeug.contrib.fixers import ProxyFix
 
 app = Flask(__name__)
 
+# TODO
+# если базы данных нет, то удалить все проекты
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 

@@ -1,16 +1,21 @@
 import random
 
+
 class RandomClassifier():
-    def __init__(self, num_classes = 2, start_num = 0):
+    def __init__(self, num_classes=2, start_num=0):
         self.num_classes = num_classes
         self.start_num = start_num
+        self.lst = []
+
+        for i in range(int(self.num_classes)):
+            self.lst.append(self.start_num)
+            self.start_num += 1
 
     def fit(self, X, Y):
         pass
 
     def predict(self, X):
-        lst = [i for i in range(int(self.start_num), int(self.num_classes)+1)]
-        return random.choice(lst)
+        return random.choice(self.lst)
 
     def predict_proba(self):
         pass
@@ -29,21 +34,9 @@ def train(X, Y):
 
 def test(model, X, Y):
     metrics = {}
+    plots = {}
 
-    accuracy = 0
-
-    predicted_arr = []
-
-    for i in X:
-        predicted_arr.append(model.predict(i))
-
-    for i in range(len(predicted_arr)):
-        if int(predicted_arr[i]) == int(Y[i]):
-            accuracy += 1
-
-    accuracy = accuracy / (len(predicted_arr) + 0.0)
-    metrics['mean accuracy'] = accuracy
-    return metrics
+    return metrics, plots
 
 
 def classify(model, features_arr):

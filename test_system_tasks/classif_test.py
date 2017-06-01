@@ -34,7 +34,7 @@ for i in f.readlines():
     s_split = s.split(",")
 
     X.append([float(i) for i in s_split[:-1]])
-    Y.append(s_split[-1])
+    Y.append(int(s_split[-1]))
 
 f.close()
 
@@ -69,8 +69,16 @@ def mean_score(y_true, y_pred):
 # model2 = ml_data.common_algorithms.classification.svm.train(X_train, Y_train)
 # print (model2.score(X_test, Y_test))
 
-import test.data.random_algorithm
+import files_for_test.random_algorithm
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
-model3 = test.data.random_algorithm.train(X_train, Y_train)
-print (test.data.random_algorithm.test(model3, X_test, Y_test))
+model3 = files_for_test.random_algorithm.train(X_train, Y_train)
+
+
+print (files_for_test.random_algorithm.test(model3, X_test, Y_test))
+
+predicted = files_for_test.random_algorithm.classify(model3, X_test)[0]
+
+print (predicted)
+
+print (mean_score(predicted, Y_test))

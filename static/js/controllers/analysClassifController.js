@@ -78,6 +78,9 @@ myApp.controller("analysClassifController", function ($scope, $http) {
     };
 
     $scope.startProcessing = function (selectedObjects) {
+        $scope.metrics = null;
+        $scope.img = null;
+
         $http({
             method: 'POST',
             dataType: 'json',
@@ -133,6 +136,26 @@ myApp.controller("analysClassifController", function ($scope, $http) {
     };
 
     $scope.changeColor = function (styleVar) {
+        switch (styleVar) {
+            case "styleProject":
+                $scope["styleRecord"]={color:'black'};
+                $scope["styleAlgorithms"]={color:'black'};
+                $scope["styleResultType"]={color:'black'};
+                break;
+
+            case "styleRecord":
+                $scope["styleAlgorithms"]={color:'black'};
+                $scope["styleResultType"]={color:'black'};
+                break;
+
+            case "styleAlgorithms":
+                $scope["styleResultType"]={color:'black'};
+                break;
+
+            case "styleResultType":
+                break;
+        }
+
         $scope[styleVar]={color:'blue'};
     };
 
