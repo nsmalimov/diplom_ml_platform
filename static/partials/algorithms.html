@@ -66,7 +66,8 @@
                 <div class="row voffset" ng-if="ctrl.createNewFlag">
                     <div class="input-group">
                         <p>Название</p>
-                        <input style="margin-bottom: 10px" type="text" class="form-control" ng-model="projectObject.title">
+                        <input style="margin-bottom: 10px" type="text" class="form-control"
+                               ng-model="projectObject.title">
                         <p>Описание</p>
                         <input type="text" class="form-control" ng-model="projectObject.description">
                         <div style="margin-top: 70px">
@@ -82,14 +83,18 @@
                     <div class="section">
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-5">
                                     <div class="col-md-6" ng-repeat="item in allAlgorithmsByProjectId">
-                                        <img
-                                                src="/image/algorithm_image_icon.jpeg"
-                                                class="img-responsive">
-                                        <h2>[[item.title]]</h2>
-                                        <p>[[item.description]]</p>
-                                        <a class="btn btn-primary" ng-click="toggle(item)">Подробнее</a>
+                                        <div>
+                                            <img
+                                                    src="/image/algorithm_image_icon.jpeg"
+                                                    class="img-responsive">
+                                            <h2 style="text-align: center">[[item.title]]</h2>
+                                            <p style="text-align: center">[[item.description]]</p>
+                                            <div style="text-align:center;">
+                                                <a class="btn btn-primary col-centered" ng-click="toggle(item)">Подробнее</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -129,3 +134,5 @@
         </div>
     </div>
 </div>
+
+<div style="margin-bottom: 40px"></div>
