@@ -81,9 +81,9 @@ def plot_model_func(path_to_plot_model):
     return send_file(path_to_plot_model, mimetype='image/gif')
 
 
-@app.route('/object/<project_id>/<object_type>/<string:file_name>')
-def get_object(project_id, object_type, file_name):
-    filepath = load_object(project_id, object_type, file_name)
+@app.route('/object/<project_id>/<object_type>/<string:filename>')
+def get_object(project_id, object_type, filename):
+    filepath = load_object(project_id, object_type, filename)
     return send_file(filepath)
 
 

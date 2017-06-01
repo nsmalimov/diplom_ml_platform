@@ -108,9 +108,9 @@
                                                         Удалить
                                                     </button>
                                                 </div>
-                                                <div class="row voffset">
+                                                <div class="row voffset" ng-if="!selectedItem.preloaded">
                                                     <a target="_self"
-                                                       href="/object/[[selectedItem.project_id]]algorithms[[selectedItem.filename]]"
+                                                       href="/object/[[selectedItem.project_id]]/algorithms/[[selectedItem.filename]]"
                                                        download="[[selectedItem.filename]]" class="btn btn-info"
                                                        role="button">Скачать</a>
                                                 </div>
