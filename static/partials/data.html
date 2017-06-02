@@ -46,7 +46,7 @@
                     <input id="file-input" type="file" name="file"
                            onchange="angular.element(this).scope().readFile(this)"/>
                 </div>
-                <button type="button" class="btn btn-default" ng-click="uploadFile()" style="margin-top: 20px">
+                <button ng-if="ctrl.selectedTaskType" type="button" class="btn btn-default" ng-click="uploadFile()" style="margin-top: 20px">
                     Загрузить
                 </button>
             </div>

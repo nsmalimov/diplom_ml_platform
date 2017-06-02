@@ -44,10 +44,6 @@ myApp.controller("analysClassifController", function ($scope, $http) {
         });
     };
 
-    //$scope.concatAlgorithmsTypes = function () {
-    //    $scope.algorithmsByProjectAndCommon = $scope.allAlgorithmsByProjectId.concat($scope.commonAlgorithms);
-    //};
-
     $scope.loadAllProjects();
 
     $scope.loadAllDataByProjectId = function (project_id) {
@@ -123,16 +119,6 @@ myApp.controller("analysClassifController", function ($scope, $http) {
         })
     };
 
-    // $scope.loadAllCommonAlgorithms = function (project_id) {
-    //     $http({
-    //         method: 'GET',
-    //         url: urlsList.algorithm.load_all_common
-    //     }).then(function successCallback(response) {
-    //         $scope.commonAlgorithms = response.data;
-    //     }, function errorCallback(response) {
-    //     });
-    // };
-
     $scope.loadAllAnalysClassifByProjectId = function (project_id) {
         if (project_id) {
 
@@ -172,8 +158,6 @@ myApp.controller("analysClassifController", function ($scope, $http) {
 
         $scope[styleVar]={color:'blue'};
     };
-
-    //$scope.loadAllCommonAlgorithms();
 
     $scope.loadAllResultTypes();
 });

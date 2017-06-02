@@ -353,9 +353,6 @@ def find_best_alg_func_processing(project, result_type_1, record_1, algorithm_1,
     data["res"]["classification"]["best"] = max(data["res"]["classification"].items(),
                                             key=operator.itemgetter(1))[0]
 
-    print (data["res"]["classification"]["best"])
-    print (data["res"]["clustering"]["best"])
-
     res_json = json.dumps(data)
     return res_json
 

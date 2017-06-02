@@ -6,3 +6,4 @@ python 3
 
 sudo pip3 install -r requirements.txt
 
+https://github.com/damnever/pigar - gen requirements.txt
