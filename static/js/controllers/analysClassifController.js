@@ -16,6 +16,9 @@ myApp.controller("analysClassifController", function ($scope, $http) {
 
     $scope.findBest = false;
 
+    $scope.bestClassif = null;
+    $scope.bestCluster = null;
+
     $scope.type = null;
     $scope.metrics = null;
     $scope.resultImages = null;
@@ -72,10 +75,7 @@ myApp.controller("analysClassifController", function ($scope, $http) {
                 contentType: 'application/json'
             }).then(function successCallback(response) {
                 $scope.allAlgorithmsByProjectId = response.data;
-
-                //console.log($scope.allAlgorithmsByProjectId);
                 $scope.algorithmsByProjectAndCommon = $scope.allAlgorithmsByProjectId;
-                //$scope.concatAlgorithmsTypes();
             }, function errorCallback(response) {
             })
         }
@@ -102,7 +102,6 @@ myApp.controller("analysClassifController", function ($scope, $http) {
             contentType: 'application/json'
         }).then(function successCallback(response) {
             var dataProcessingResult = response.data;
-            console.log(dataProcessingResult);
             $scope.type = dataProcessingResult['type'];
             switch ($scope.type) {
                 case "train_save_metrics_graphics":
@@ -111,6 +110,11 @@ myApp.controller("analysClassifController", function ($scope, $http) {
                     break;
                 case "automaticle_best_model":
                     $scope.res = dataProcessingResult["res"];
+                    $scope.bestClassif = $scope.res.classification.best;
+                    $scope.bestCluster = $scope.res.clustering.best;
+
+                    delete $scope.res.clustering.best;
+                    delete $scope.res.classification.best;
                     break;
                 default:
                     break;

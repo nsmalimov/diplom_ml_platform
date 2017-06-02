@@ -1,24 +1,26 @@
-import hashlib
+import importlib.util
 import importlib.util
 import json
+import operator
 import os
 import pickle
-import os
-#from app.util.plot import plt
-from imp import reload
 
-from app.models import Algorithm
-from app.util.plot import plt
 from sklearn.model_selection import train_test_split
 
+from app.models import Algorithm
 from app.util.funcs import ml_path
+from app.util.plot import plt
 from app.workers.metrics import get_predetermined_metrics_classif, get_predetermined_metrics_cluster
 from app.workers.plots import get_predetermined_plots_classif
+
+
+# from app.util.plot import plt
 
 def regresh_plots():
     plt.clf()
     plt.cla()
     plt.close()
+
 
 def read_data(data, project):
     X, Y = [], []
@@ -45,10 +47,10 @@ def read_data(data, project):
 
 def import_alg(path_to_alg):
     # python 3.5 ?
-    #path = "ml_data.project_1.algorithms.random_algorithm"
-    #spec = importlib.util.spec_from_file_location(path, path_to_alg)
-    #alg = importlib.util.module_from_spec(spec)
-    #spec.loader.exec_module(alg)
+    # path = "ml_data.project_1.algorithms.random_algorithm"
+    # spec = importlib.util.spec_from_file_location(path, path_to_alg)
+    # alg = importlib.util.module_from_spec(spec)
+    # spec.loader.exec_module(alg)
 
     path = os.path.dirname(os.path.abspath(__file__)).split("/")[:-2]
     path = "/".join(path)
@@ -97,11 +99,12 @@ def get_hash_by_data_alg(data, algorithm, project):
     data_from_file = f.read()
     f.close()
 
-    #all = algorithm_code + data_from_file
+    # all = algorithm_code + data_from_file
 
     mult_char = len(algorithm_code) * len(data_from_file)
 
     return str(mult_char)
+
 
 def get_all_algorithms_by_project_id_and_data_type(taskType, project_id):
     # TODO
@@ -149,7 +152,7 @@ def train_and_save_model(data, algorithm, project):
         model, alg_object = train_model(algorithm, X, Y, project)
         path_model = ml_path + "project_" + str(project.id) + "/models/" + hash
 
-        print (algorithm.title)
+        print(algorithm.title)
         if algorithm.custom_save_model:
             alg_object.write_model(model, path_model)
         else:
@@ -166,6 +169,7 @@ def read_model(path_model):
     f.close()
 
     return model
+
 
 # возможность предсказывать
 def predict():
@@ -213,7 +217,7 @@ def get_metrics_plots_from_alg_classif(data, algorithm, project):
         path = path_to_plots + i + ".png"
         path = path.replace(" ", "_")
         plots[i].savefig(path)
-        #plt.close("all")
+        # plt.close("all")
 
         plots_res[i] = path.replace("/", ":")
 
@@ -269,7 +273,7 @@ def get_metrics_plots_from_alg_cluster(data, algorithm, project):
         path = path_to_plots + i + ".png"
         path = path.replace(" ", "_")
         plots[i].savefig(path)
-        #plt.close("all")
+        # plt.close("all")
 
         plots_res[i] = path.replace("/", ":")
 
@@ -277,15 +281,18 @@ def get_metrics_plots_from_alg_cluster(data, algorithm, project):
 
     return metrics, X_test, plots_res, Y_test, clusters_from_alg
 
+
 def start_processing_func_classif(project, result_type, data, algorithm, analys_classif):
     type = result_type.name
 
-    print ("TYPE " + type)
+    print("TYPE " + type)
 
     train_and_save_model(data, algorithm, project)
 
     # метрики или свои на выбор или заранее заданные
-    metrics1, X_test, plots1, y_real_label, y_class_predict, y_proba_predict = get_metrics_plots_from_alg_classif(data, algorithm, project)
+    metrics1, X_test, plots1, y_real_label, y_class_predict, y_proba_predict = get_metrics_plots_from_alg_classif(data,
+                                                                                                                  algorithm,
+                                                                                                                  project)
     metrics2 = get_predetermined_metrics_classif(y_real_label, y_class_predict, y_proba_predict)
     regresh_plots()
 
@@ -295,7 +302,7 @@ def start_processing_func_classif(project, result_type, data, algorithm, analys_
     data = {}
     data['type'] = 'train_save_metrics_graphics'
 
-    if not(metrics1 is None):
+    if not (metrics1 is None):
         data['metrics'] = metrics1
         data['metrics'].update(metrics2)
     else:
@@ -320,7 +327,7 @@ def find_best_alg_func_processing(project, result_type_1, record_1, algorithm_1,
 
         if i.type == "classification":
             # метрики или свои на выбор или заранее заданные
-            metrics1, X_test, plots1, y_real_label, y_class_predict, y_proba_predict =\
+            metrics1, X_test, plots1, y_real_label, y_class_predict, y_proba_predict = \
                 get_metrics_plots_from_alg_classif(record_1, i, project)
 
             metrics2 = get_predetermined_metrics_classif(y_real_label, y_class_predict, y_proba_predict)
@@ -340,6 +347,15 @@ def find_best_alg_func_processing(project, result_type_1, record_1, algorithm_1,
     data["type"] = "automaticle_best_model"
     data["res"] = main_result
 
+    data["res"]["clustering"]["best"] = max(data["res"]["clustering"].items(),
+                                                key=operator.itemgetter(1))[0]
+
+    data["res"]["classification"]["best"] = max(data["res"]["classification"].items(),
+                                            key=operator.itemgetter(1))[0]
+
+    print (data["res"]["classification"]["best"])
+    print (data["res"]["clustering"]["best"])
+
     res_json = json.dumps(data)
     return res_json
 
@@ -350,7 +366,8 @@ def start_processing_func_cluster(project, result_type, data, algorithm, analys_
     train_and_save_model(data, algorithm, project)
 
     # метрики или свои на выбор или заранее заданные
-    metrics1, X_test, plots1, real_clusters_arr, clusters_from_alg = get_metrics_plots_from_alg_cluster(data, algorithm, project)
+    metrics1, X_test, plots1, real_clusters_arr, clusters_from_alg = get_metrics_plots_from_alg_cluster(data, algorithm,
+                                                                                                        project)
     metrics2 = get_predetermined_metrics_cluster(real_clusters_arr, clusters_from_alg)
     regresh_plots()
 
@@ -360,7 +377,7 @@ def start_processing_func_cluster(project, result_type, data, algorithm, analys_
     data = {}
     data['type'] = 'train_save_metrics_graphics'
 
-    if not(metrics1 is None):
+    if not (metrics1 is None):
         data['metrics'] = metrics1
         data['metrics'].update(metrics2)
     else:

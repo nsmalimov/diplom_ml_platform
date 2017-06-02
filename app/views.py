@@ -223,9 +223,6 @@ def load_all_result_types():
 def start_processing():
     jsonData = request.get_json()
 
-    print ("for processing")
-    print (jsonData)
-
     selectedProject = jsonData['selectedProject']
     selectedRecord = jsonData['selectedRecord']
     selectedAlgorithm = jsonData['selectedAlgorithm']

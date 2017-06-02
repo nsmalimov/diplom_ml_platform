@@ -189,7 +189,10 @@
                             <ul ng-repeat="(key0, val0) in res">
                                 <p>[[key0]]</p>
                                 <li ng-repeat="(key1, val1) in val0">
-                                    [[ key1 ]]: [[ val1 ]]
+                                    <p style="color: red" ng-if="key1==bestClassif || key1==bestCluster && key1!='best'">
+                                        [[ key1 ]]: [[ val1 ]]</p>
+                                    <p ng-if="key1!=bestClassif && key1!=bestCluster && key1!='best'">
+                                        [[ key1 ]]: [[ val1 ]]</p>
                                 </li>
                             </ul>
                         </div>
