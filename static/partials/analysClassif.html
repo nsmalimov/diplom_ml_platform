@@ -169,17 +169,29 @@
                             Получить результат
                         </button>
                     </div>
-                    <div class="row voffset">
-                        <p>Метрики</p>
-                        <div ng-repeat="(key, value) in metrics">
-                            <p>[[key]]: [[value]]</p>
+                    <div ng-if="type=='train_save_metrics_graphics'">
+                        <div class="row voffset">
+                            <p>Метрики</p>
+                            <div ng-repeat="(key, value) in metrics">
+                                <p>[[key]]: [[value]]</p>
+                            </div>
+                        </div>
+                        <div class="row voffset">
+                            <p>Графики</p>
+                            <div ng-repeat="(key, value) in img">
+                                <p>[[key]]</p>
+                                <img ng-src="[[value]]" class="img-responsive">
+                            </div>
                         </div>
                     </div>
                     <div class="row voffset">
-                        <p>Графики</p>
-                        <div ng-repeat="(key, value) in img">
-                            <p>[[key]]</p>
-                            <img ng-src="[[value]]" class="img-responsive">
+                        <div ng-if="type=='automaticle_best_model'">
+                            <ul ng-repeat="(key0, val0) in res">
+                                <p>[[key0]]</p>
+                                <li ng-repeat="(key1, val1) in val0">
+                                    [[ key1 ]]: [[ val1 ]]
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>

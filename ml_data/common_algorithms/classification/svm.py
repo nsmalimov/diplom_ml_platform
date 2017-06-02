@@ -21,5 +21,5 @@ def test(model, X, Y):
 
 def classify(model, features_arr):
     res_arr_class = [model.predict(np.array(i).reshape(1, -1)) for i in features_arr]
-    res_arr_proba = [model.predict_proba(np.array(i).reshape(1, -1)) for i in features_arr]
+    res_arr_proba = None
     return res_arr_class, res_arr_proba

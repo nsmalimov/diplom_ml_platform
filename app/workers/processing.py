@@ -312,11 +312,9 @@ def find_best_alg_func_processing(project, result_type_1, record_1, algorithm_1,
     all_algorithms_by_project_and_data_type = \
         get_all_algorithms_by_project_id_and_data_type(record_1.task_type, project.id)
 
-    main_result = {}
+    main_result = {"classification": {}, "clustering": {}}
 
     for i in all_algorithms_by_project_and_data_type:
-        print (i)
-        print (i.type)
 
         train_and_save_model(record_1, i, project)
 
@@ -326,6 +324,8 @@ def find_best_alg_func_processing(project, result_type_1, record_1, algorithm_1,
                 get_metrics_plots_from_alg_classif(record_1, i, project)
 
             metrics2 = get_predetermined_metrics_classif(y_real_label, y_class_predict, y_proba_predict)
+
+            main_result["classification"][i.title] = metrics2["mean_score"]
         else:
             train_and_save_model(record_1, i, project)
 
@@ -334,9 +334,11 @@ def find_best_alg_func_processing(project, result_type_1, record_1, algorithm_1,
                 get_metrics_plots_from_alg_cluster(record_1, i, project)
             metrics2 = get_predetermined_metrics_cluster(real_clusters_arr, clusters_from_alg)
 
-        print (metrics2)
+            main_result["clustering"][i.title] = metrics2["adjusted_rand_score"]
 
     data = {}
+    data["type"] = "automaticle_best_model"
+    data["res"] = main_result
 
     res_json = json.dumps(data)
     return res_json
@@ -345,21 +347,15 @@ def find_best_alg_func_processing(project, result_type_1, record_1, algorithm_1,
 def start_processing_func_cluster(project, result_type, data, algorithm, analys_classif):
     type = result_type.name
 
-    metrics1 = {}
+    train_and_save_model(data, algorithm, project)
 
-    plots1 = {}
-    plots2 = {}
+    # метрики или свои на выбор или заранее заданные
+    metrics1, X_test, plots1, real_clusters_arr, clusters_from_alg = get_metrics_plots_from_alg_cluster(data, algorithm, project)
+    metrics2 = get_predetermined_metrics_cluster(real_clusters_arr, clusters_from_alg)
+    regresh_plots()
 
-    if type == "train_save_metrics_graphics":
-        train_and_save_model(data, algorithm, project)
-
-        # метрики или свои на выбор или заранее заданные
-        metrics1, X_test, plots1, real_clusters_arr, clusters_from_alg = get_metrics_plots_from_alg_cluster(data, algorithm, project)
-        metrics2 = get_predetermined_metrics_cluster(real_clusters_arr, clusters_from_alg)
-        regresh_plots()
-
-        plots2 = get_predetermined_plots_classif(X_test, clusters_from_alg, project.id)
-        regresh_plots()
+    plots2 = get_predetermined_plots_classif(X_test, clusters_from_alg, project.id)
+    regresh_plots()
 
     data = {}
     data['type'] = 'train_save_metrics_graphics'

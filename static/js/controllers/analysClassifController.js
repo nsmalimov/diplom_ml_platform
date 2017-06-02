@@ -29,6 +29,8 @@ myApp.controller("analysClassifController", function ($scope, $http) {
 
     $scope.resultTypes = null;
 
+    $scope.res = null;
+
     $scope.loadAllProjects = function () {
         $http({
             method: 'GET',
@@ -102,11 +104,13 @@ myApp.controller("analysClassifController", function ($scope, $http) {
             var dataProcessingResult = response.data;
             console.log(dataProcessingResult);
             $scope.type = dataProcessingResult['type'];
-
             switch ($scope.type) {
                 case "train_save_metrics_graphics":
                     $scope.metrics = dataProcessingResult['metrics'];
                     $scope.img = dataProcessingResult['img'];
+                    break;
+                case "automaticle_best_model":
+                    $scope.res = dataProcessingResult["res"];
                     break;
                 default:
                     break;

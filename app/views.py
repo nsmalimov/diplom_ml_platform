@@ -258,6 +258,8 @@ def start_processing():
 
     res_json = json.dumps(data)
 
+    # TODO
+    # проверка на неправильный выбор
     if int(selectedAlgorithm) != -1:
         if algorithm_1.type == "classification":
             res_json = start_processing_func_classif(project, result_type_1, record_1, algorithm_1, analys_classif)
