@@ -6,6 +6,8 @@ import pickle
 import os
 #from app.util.plot import plt
 from imp import reload
+
+from app.models import Algorithm
 from app.util.plot import plt
 from sklearn.model_selection import train_test_split
 
@@ -100,6 +102,32 @@ def get_hash_by_data_alg(data, algorithm, project):
     mult_char = len(algorithm_code) * len(data_from_file)
 
     return str(mult_char)
+
+def get_all_algorithms_by_project_id_and_data_type(taskType, project_id):
+    # TODO
+    # переписать участок
+    if taskType == "universal":
+        all_algorithms_by_project1 = Algorithm.query.filter(Algorithm.project_id == project_id,
+                                                            Algorithm.type == "clustering").all()
+        all_algorithms_by_project2 = Algorithm.query.filter(Algorithm.project_id == project_id,
+                                                            Algorithm.type == "classification").all()
+
+        common_algorithms1 = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == "clustering").all()
+        common_algorithms2 = Algorithm.query.filter(Algorithm.preloaded == True,
+                                                    Algorithm.type == "classification").all()
+
+        common_algorithms = common_algorithms1 + common_algorithms2
+
+        all_algorithms_by_project = all_algorithms_by_project1 + all_algorithms_by_project2
+    else:
+        all_algorithms_by_project = Algorithm.query.filter(Algorithm.project_id == project_id,
+                                                           Algorithm.type == taskType).all()
+
+        common_algorithms = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == taskType).all()
+
+    all_algorithms_by_project += common_algorithms
+
+    return all_algorithms_by_project
 
 
 def check_model_exist(hash, project):
@@ -252,21 +280,17 @@ def get_metrics_plots_from_alg_cluster(data, algorithm, project):
 def start_processing_func_classif(project, result_type, data, algorithm, analys_classif):
     type = result_type.name
 
-    metrics1 = {}
+    print ("TYPE " + type)
 
-    plots1 = {}
-    plots2 = {}
+    train_and_save_model(data, algorithm, project)
 
-    if type == "train_save_metrics_graphics":
-        train_and_save_model(data, algorithm, project)
+    # метрики или свои на выбор или заранее заданные
+    metrics1, X_test, plots1, y_real_label, y_class_predict, y_proba_predict = get_metrics_plots_from_alg_classif(data, algorithm, project)
+    metrics2 = get_predetermined_metrics_classif(y_real_label, y_class_predict, y_proba_predict)
+    regresh_plots()
 
-        # метрики или свои на выбор или заранее заданные
-        metrics1, X_test, plots1, y_real_label, y_class_predict, y_proba_predict = get_metrics_plots_from_alg_classif(data, algorithm, project)
-        metrics2 = get_predetermined_metrics_classif(y_real_label, y_class_predict, y_proba_predict)
-        regresh_plots()
-
-        plots2 = get_predetermined_plots_classif(X_test, y_class_predict, project.id)
-        regresh_plots()
+    plots2 = get_predetermined_plots_classif(X_test, y_class_predict, project.id)
+    regresh_plots()
 
     data = {}
     data['type'] = 'train_save_metrics_graphics'
@@ -281,7 +305,40 @@ def start_processing_func_classif(project, result_type, data, algorithm, analys_
     data['img'].update(plots2)
 
     res_json = json.dumps(data)
+    return res_json
 
+
+def find_best_alg_func_processing(project, result_type_1, record_1, algorithm_1, analys_classif, type_by_data):
+    all_algorithms_by_project_and_data_type = \
+        get_all_algorithms_by_project_id_and_data_type(record_1.task_type, project.id)
+
+    main_result = {}
+
+    for i in all_algorithms_by_project_and_data_type:
+        print (i)
+        print (i.type)
+
+        train_and_save_model(record_1, i, project)
+
+        if i.type == "classification":
+            # метрики или свои на выбор или заранее заданные
+            metrics1, X_test, plots1, y_real_label, y_class_predict, y_proba_predict =\
+                get_metrics_plots_from_alg_classif(record_1, i, project)
+
+            metrics2 = get_predetermined_metrics_classif(y_real_label, y_class_predict, y_proba_predict)
+        else:
+            train_and_save_model(record_1, i, project)
+
+            # метрики или свои на выбор или заранее заданные
+            metrics1, X_test, plots1, real_clusters_arr, clusters_from_alg = \
+                get_metrics_plots_from_alg_cluster(record_1, i, project)
+            metrics2 = get_predetermined_metrics_cluster(real_clusters_arr, clusters_from_alg)
+
+        print (metrics2)
+
+    data = {}
+
+    res_json = json.dumps(data)
     return res_json
 
 

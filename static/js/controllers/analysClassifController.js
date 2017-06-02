@@ -14,6 +14,8 @@ myApp.controller("analysClassifController", function ($scope, $http) {
     $scope.selectedAlgorithm = null;
     $scope.selectedResultType = null;
 
+    $scope.findBest = false;
+
     $scope.type = null;
     $scope.metrics = null;
     $scope.resultImages = null;
@@ -80,6 +82,10 @@ myApp.controller("analysClassifController", function ($scope, $http) {
     $scope.startProcessing = function (selectedObjects) {
         $scope.metrics = null;
         $scope.img = null;
+
+        if (selectedObjects.selectedAlgorithm.id === undefined) {
+            selectedObjects.selectedAlgorithm.id = -1;
+        }
 
         $http({
             method: 'POST',

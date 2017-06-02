@@ -67,7 +67,8 @@
             <div class="col-md-5">
                 <div ng-if="ctrl.selectType=='projects'">
                     <div class="row voffset">
-                        <ui-select ng-model="ctrl.selectedObjects.selectedProject" theme="select2" style="min-width: 300px;"
+                        <ui-select ng-model="ctrl.selectedObjects.selectedProject" theme="select2"
+                                   style="min-width: 300px;"
                                    title="Выберите проект" ng-change="
                                    ctrl.selectedObjects.selectedRecord=null;
                                    ctrl.selectedObjects.selectedAlgorithm=null;
@@ -90,7 +91,8 @@
 
                 <div ng-if="ctrl.selectType=='records' && ctrl.selectedObjects.selectedProject">
                     <div class="row voffset">
-                        <ui-select ng-model="ctrl.selectedObjects.selectedRecord" theme="select2" style="min-width: 300px;"
+                        <ui-select ng-model="ctrl.selectedObjects.selectedRecord" theme="select2"
+                                   style="min-width: 300px;"
                                    title="Выберите данные" ng-change="
                                    ctrl.selectedObjects.selectedAlgorithm=null;
                                    ctrl.selectedObjects.selectedResultType=null;
@@ -111,28 +113,42 @@
 
                 <div ng-if="ctrl.selectType=='algorithms' && ctrl.selectedObjects.selectedProject && ctrl.selectedObjects.selectedRecord">
                     <div class="row voffset">
-                        <ui-select ng-model="ctrl.selectedObjects.selectedAlgorithm" theme="select2" style="min-width: 300px;"
-                                   title="Выберите алгоритм" ng-change="
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="findBest" ng-change="
+                                    ctrl.selectedObjects.selectedAlgorithm={};
+                                    ctrl.selectedObjects.selectedResultType=null;
+                                    changeColor('styleAlgorithms')">
+                                Поиск наилучшего
+                            </label>
+                        </div>
+                        <div ng-if="findBest==false">
+                            <ui-select ng-model="ctrl.selectedObjects.selectedAlgorithm" theme="select2"
+                                       style="min-width: 300px;"
+                                       title="Выберите алгоритм" ng-change="
                                    ctrl.selectedObjects.selectedResultType=null;
                                    changeColor('styleAlgorithms')">
-                            <ui-select-match placeholder="Select a algorithm">
-                                [[$select.selected.title]]
-                            </ui-select-match>
-                            <ui-select-choices
-                                    repeat="item in algorithmsByProjectAndCommon | propsFilter: {title: $select.search, description: $select.search}">
-                                <div ng-bind-html="item.title | highlight: $select.search"></div>
-                                <small>
-                                    title: [[item.title]]
-                                    description: <span ng-bind-html="''+item.title | highlight: $select.search"></span>
-                                </small>
-                            </ui-select-choices>
-                        </ui-select>
+                                <ui-select-match placeholder="Select a algorithm">
+                                    [[$select.selected.title]]
+                                </ui-select-match>
+                                <ui-select-choices
+                                        repeat="item in algorithmsByProjectAndCommon | propsFilter: {title: $select.search, description: $select.search}">
+                                    <div ng-bind-html="item.title | highlight: $select.search"></div>
+                                    <small>
+                                        title: [[item.title]]
+                                        description: <span
+                                            ng-bind-html="''+item.title | highlight: $select.search"></span>
+                                    </small>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
                     </div>
                 </div>
 
                 <div ng-if="ctrl.selectType=='results' && ctrl.selectedObjects.selectedProject && ctrl.selectedObjects.selectedRecord && ctrl.selectedObjects.selectedAlgorithm">
                     <div class="row voffset">
-                        <ui-select ng-model="ctrl.selectedObjects.selectedResultType" theme="select2" style="min-width: 300px;"
+                        <ui-select ng-model="ctrl.selectedObjects.selectedResultType" theme="select2"
+                                   style="min-width: 300px;"
                                    title="Выберите результат" ng-change="changeColor('styleResultType')">
                             <ui-select-match placeholder="Select a result type">
                                 [[$select.selected.title]]

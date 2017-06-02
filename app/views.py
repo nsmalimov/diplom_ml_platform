@@ -7,7 +7,8 @@ from werkzeug.utils import secure_filename
 
 from app.models import Project, Data, Algorithm, AnalysClassif, ResultTypes, db
 from app.util.funcs import *
-from app.workers.processing import start_processing_func_classif, start_processing_func_cluster
+from app.workers.processing import start_processing_func_classif, start_processing_func_cluster, \
+    get_all_algorithms_by_project_id_and_data_type, find_best_alg_func_processing
 from run import app
 
 
@@ -161,29 +162,10 @@ def load_all_algorithms_by_project_by_type():
     project_id = jsonData["project_id"]
     taskType = jsonData["type"]
 
-    # TODO
-    # переписать участок
-    if taskType == "universal":
-        all_algorithms_by_project1 = Algorithm.query.filter(Algorithm.project_id == project_id,
-                                                           Algorithm.type == "clustering").all()
-        all_algorithms_by_project2 = Algorithm.query.filter(Algorithm.project_id == project_id,
-                                                            Algorithm.type == "classification").all()
+    all_algorithms_by_project_and_data_type = \
+        get_all_algorithms_by_project_id_and_data_type(taskType, project_id)
 
-        common_algorithms1 = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == "clustering").all()
-        common_algorithms2 = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == "classification").all()
-
-        common_algorithms = common_algorithms1 + common_algorithms2
-
-        all_algorithms_by_project = all_algorithms_by_project1 + all_algorithms_by_project2
-    else:
-        all_algorithms_by_project = Algorithm.query.filter(Algorithm.project_id == project_id,
-                                                           Algorithm.type == taskType).all()
-
-        common_algorithms = Algorithm.query.filter(Algorithm.preloaded == True, Algorithm.type == taskType).all()
-
-    all_algorithms_by_project += common_algorithms
-
-    return make_response(json.dumps([i.serialize for i in all_algorithms_by_project]))
+    return make_response(json.dumps([i.serialize for i in all_algorithms_by_project_and_data_type]))
 
 
 @app.route('/algorithm_load_all_by_project', methods=['POST'])
@@ -241,13 +223,16 @@ def load_all_result_types():
 def start_processing():
     jsonData = request.get_json()
 
+    print ("for processing")
+    print (jsonData)
+
     selectedProject = jsonData['selectedProject']
     selectedRecord = jsonData['selectedRecord']
     selectedAlgorithm = jsonData['selectedAlgorithm']
     selectedResultType = jsonData['selectedResultType']
 
     project = Project.query.filter_by(id=selectedProject).first()
-    algorithm_1 = Algorithm.query.filter_by(id=selectedAlgorithm).first()
+
     result_type_1 = ResultTypes.query.filter_by(id=selectedResultType).first()
     record_1 = Data.query.filter_by(id=selectedRecord).first()
 
@@ -255,7 +240,12 @@ def start_processing():
     db.session.add(analys_classif)
     db.session.commit()
 
-    analys_classif.algorithms.append(algorithm_1)
+    algorithm_1 = None
+
+    if int(selectedAlgorithm) != -1:
+        algorithm_1 = Algorithm.query.filter_by(id=selectedAlgorithm).first()
+        analys_classif.algorithms.append(algorithm_1)
+
     analys_classif.result_types.append(result_type_1)
 
     db.session.commit()
@@ -268,10 +258,16 @@ def start_processing():
 
     res_json = json.dumps(data)
 
-    if algorithm_1.type == "classification":
-        res_json = start_processing_func_classif(project, result_type_1, record_1, algorithm_1, analys_classif)
+    if int(selectedAlgorithm) != -1:
+        if algorithm_1.type == "classification":
+            res_json = start_processing_func_classif(project, result_type_1, record_1, algorithm_1, analys_classif)
 
-    if algorithm_1.type == "clustering":
-        res_json = start_processing_func_cluster(project, result_type_1, record_1, algorithm_1, analys_classif)
+        if algorithm_1.type == "clustering":
+            res_json = start_processing_func_cluster(project, result_type_1, record_1, algorithm_1, analys_classif)
+
+    # значит ищем лучшую модель
+    else:
+        type_by_data = record_1.task_type
+        res_json = find_best_alg_func_processing(project, result_type_1, record_1, algorithm_1, analys_classif, type_by_data)
 
     return res_json
