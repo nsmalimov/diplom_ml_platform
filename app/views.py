@@ -63,6 +63,11 @@ def upload_algorithm(project_id):
 
         save_file(file, filename, project_id, "algorithms")
 
+        if int(custom_save_model) == 0:
+            custom_save_model = False
+        else:
+            custom_save_model = True
+
         algorithm = Algorithm(title, description, False, filename, type, custom_save_model)
 
         db.session.add(algorithm)

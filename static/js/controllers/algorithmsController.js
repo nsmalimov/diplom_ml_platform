@@ -28,7 +28,7 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
         title: null,
         description: null,
         type: null,
-        customSaveModel: null
+        customSaveModel: false
     };
 
     $scope.readFile = function (event) {
@@ -37,6 +37,13 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
     };
 
     $scope.uploadFile = function () {
+        if ($scope.projectObject.customSaveModel) {
+            $scope.projectObject.customSaveModel = 1;
+        }
+        else {
+            $scope.projectObject.customSaveModel = 0;
+        }
+
         $scope.fd.append("title", $scope.projectObject.title);
         $scope.fd.append("description", $scope.projectObject.description);
         $scope.fd.append("type", $scope.projectObject.type);

@@ -66,19 +66,19 @@ def train_model(algorithm, X, Y, project):
     else:
         path_to_alg = ml_path + "project_" + str(project.id) + "/algorithms/" + algorithm.filename
 
-    alg = import_alg(path_to_alg)
+    alg_object = import_alg(path_to_alg)
 
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
     model = None
 
     if algorithm.type == "classification":
-        model = alg.train(X_train, Y_train)
+        model = alg_object.train(X_train, Y_train)
 
     if algorithm.type == "clustering":
-        model = alg.train(X_train + X_test)
+        model = alg_object.train(X_train + X_test)
 
-    return model
+    return model, alg_object
 
 
 def get_hash_by_data_alg(data, algorithm, project):
@@ -107,15 +107,8 @@ def check_model_exist(hash, project):
     return os.path.isfile(path_model)
 
 
-def save_model(model, project, hash):
-    path_model = ml_path + "project_" + str(project.id) + "/models/" + hash
+def save_model_automaticle(model, path_model):
     f = open(path_model, "wb")
-
-    print (model)
-
-    #import ml_data.project_1.algorithms.random_algorithm
-    #reload(ml_data.project_1.algorithms.random_algorithm)
-
     pickle.dump(model, f)
     f.close()
 
@@ -125,16 +118,21 @@ def train_and_save_model(data, algorithm, project):
 
     if not (check_model_exist(hash, project)):
         X, Y = read_data(data, project)
-        model = train_model(algorithm, X, Y, project)
-        save_model(model, project, hash)
+        model, alg_object = train_model(algorithm, X, Y, project)
+        path_model = ml_path + "project_" + str(project.id) + "/models/" + hash
+
+        print (algorithm.title)
+        if algorithm.custom_save_model:
+            alg_object.write_model(model, path_model)
+        else:
+            save_model_automaticle(model, path_model)
+
         print("train and save")
     else:
         print("model already exist")
 
 
-def read_model(project, hash):
-    path_model = ml_path + "project_" + str(project.id) + "/models/" + hash
-
+def read_model(path_model):
     f = open(path_model, "rb")
     model = pickle.load(f)
     f.close()
@@ -151,7 +149,6 @@ def get_metrics_plots_from_alg_classif(data, algorithm, project):
     X, Y = read_data(data, project)
 
     hash = get_hash_by_data_alg(data, algorithm, project)
-    model = read_model(project, hash)
 
     _, X_test, _, y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
@@ -160,15 +157,22 @@ def get_metrics_plots_from_alg_classif(data, algorithm, project):
     else:
         path_to_alg = ml_path + "project_" + str(project.id) + "/algorithms/" + algorithm.filename
 
-    alg = import_alg(path_to_alg)
+    alg_object = import_alg(path_to_alg)
 
-    metrics, plots = alg.test(model, X_test, y_test)
+    path_model = ml_path + "project_" + str(project.id) + "/models/" + hash
+
+    if algorithm.custom_save_model:
+        model = alg_object.read_model(path_model)
+    else:
+        model = read_model(path_model)
+
+    metrics, plots = alg_object.test(model, X_test, y_test)
 
     path_to_plots = ml_path + "project_" + str(project.id) + "/results/images/"
 
     plots_res = {}
 
-    y_class_predict, y_proba_predict = alg.classify(model, X_test)
+    y_class_predict, y_proba_predict = alg_object.classify(model, X_test)
 
     # TODO как закрыть plt
     # проверить как работает на сервере
@@ -194,7 +198,20 @@ def get_metrics_plots_from_alg_cluster(data, algorithm, project):
     X, Y = read_data(data, project)
 
     hash = get_hash_by_data_alg(data, algorithm, project)
-    model = read_model(project, hash)
+
+    path_model = ml_path + "project_" + str(project.id) + "/models/" + hash
+
+    if algorithm.preloaded:
+        path_to_alg = algorithm.filename
+    else:
+        path_to_alg = ml_path + "project_" + str(project.id) + "/algorithms/" + algorithm.filename
+
+    alg_object = import_alg(path_to_alg)
+
+    if algorithm.custom_save_model:
+        model = alg_object.read_model(path_model)
+    else:
+        model = read_model(path_model)
 
     X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 

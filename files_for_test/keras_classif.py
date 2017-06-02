@@ -5,10 +5,10 @@ import tensorflow as tf
 from scipy.sparse.csr import csr_matrix
 import numpy as np
 
-def read_model(model, filename):
+def write_model(model, filename):
     save_model(model, filename)
 
-def write_model(filename):
+def read_model(filename):
     return load_model(filename)
 
 class NeuralClassifier:
@@ -76,6 +76,8 @@ def test(model, X, Y):
 
     return metrics, plots
 
+def isNaN(num):
+    return num != num
 
 def classify(model, features_arr):
     res_arr_proba = model.predict(features_arr)
@@ -83,7 +85,13 @@ def classify(model, features_arr):
     res_arr_class = []
 
     for i in res_arr_proba:
-        max_index = i.tolist().index(max(i))
+        try:
+            max_index = i.tolist().index(max(i))
+        except:
+            # TODO
+            # исправить (nan)
+            max_index = 0
+
         res_arr_class.append(max_index)
 
     return res_arr_class, res_arr_proba
