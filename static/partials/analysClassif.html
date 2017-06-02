@@ -118,7 +118,8 @@
                                 <input type="checkbox" ng-model="findBest" ng-change="
                                     ctrl.selectedObjects.selectedAlgorithm={};
                                     ctrl.selectedObjects.selectedResultType=null;
-                                    changeColor('styleAlgorithms')">
+                                    changeColor('styleAlgorithms');
+                                    loadAllResultTypes(true)">
                                 Поиск наилучшего
                             </label>
                         </div>
@@ -126,8 +127,9 @@
                             <ui-select ng-model="ctrl.selectedObjects.selectedAlgorithm" theme="select2"
                                        style="min-width: 300px;"
                                        title="Выберите алгоритм" ng-change="
-                                   ctrl.selectedObjects.selectedResultType=null;
-                                   changeColor('styleAlgorithms')">
+                                    ctrl.selectedObjects.selectedResultType=null;
+                                    changeColor('styleAlgorithms');
+                                    loadAllResultTypes(false)">
                                 <ui-select-match placeholder="Select a algorithm">
                                     [[$select.selected.title]]
                                 </ui-select-match>
@@ -189,7 +191,8 @@
                             <ul ng-repeat="(key0, val0) in res">
                                 <p>[[key0]]</p>
                                 <li ng-repeat="(key1, val1) in val0">
-                                    <p style="color: red" ng-if="key1==bestClassif || key1==bestCluster && key1!='best'">
+                                    <p style="color: red"
+                                       ng-if="key1==bestClassif || key1==bestCluster && key1!='best'">
                                         [[ key1 ]]: [[ val1 ]]</p>
                                     <p ng-if="key1!=bestClassif && key1!=bestCluster && key1!='best'">
                                         [[ key1 ]]: [[ val1 ]]</p>

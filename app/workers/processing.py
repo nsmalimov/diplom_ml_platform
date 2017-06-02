@@ -347,11 +347,19 @@ def find_best_alg_func_processing(project, result_type_1, record_1, algorithm_1,
     data["type"] = "automaticle_best_model"
     data["res"] = main_result
 
-    data["res"]["clustering"]["best"] = max(data["res"]["clustering"].items(),
-                                                key=operator.itemgetter(1))[0]
+    print (data["res"])
 
-    data["res"]["classification"]["best"] = max(data["res"]["classification"].items(),
+    if (len(data["res"]["clustering"]) != 0):
+        data["res"]["clustering"]["best"] = max(data["res"]["clustering"].items(),
+                                                    key=operator.itemgetter(1))[0]
+    else:
+        del data["res"]["clustering"]
+
+    if (len(data["res"]["classification"]) != 0):
+        data["res"]["classification"]["best"] = max(data["res"]["classification"].items(),
                                             key=operator.itemgetter(1))[0]
+    else:
+        del data["res"]["classification"]
 
     res_json = json.dumps(data)
     return res_json

@@ -106,8 +106,12 @@ myApp.controller("analysClassifController", function ($scope, $http) {
                     break;
                 case "automaticle_best_model":
                     $scope.res = dataProcessingResult["res"];
-                    $scope.bestClassif = $scope.res.classification.best;
-                    $scope.bestCluster = $scope.res.clustering.best;
+                    if ("classification" in $scope.res){
+                        $scope.bestClassif = $scope.res.classification.best;
+                    }
+                    if ("clustering" in $scope.res) {
+                        $scope.bestCluster = $scope.res.clustering.best;
+                    }
 
                     delete $scope.res.clustering.best;
                     delete $scope.res.classification.best;
@@ -125,12 +129,17 @@ myApp.controller("analysClassifController", function ($scope, $http) {
         }
     };
 
-    $scope.loadAllResultTypes = function () {
+    $scope.loadAllResultTypes = function (flagRemoveBestAlgType) {
         $http({
             method: 'GET',
             url: urlsList.analysClassif.load_all_result_types
         }).then(function successCallback(response) {
             $scope.resultTypes = response.data;
+            if (flagRemoveBestAlgType) {
+                // TODO
+                // rewrite
+                $scope.resultTypes.pop();
+            }
         }, function errorCallback(response) {
         });
     };
@@ -159,5 +168,5 @@ myApp.controller("analysClassifController", function ($scope, $http) {
         $scope[styleVar]={color:'blue'};
     };
 
-    $scope.loadAllResultTypes();
+    //$scope.loadAllResultTypes();
 });
