@@ -1,69 +1,73 @@
 import keras
-from keras.models import Sequential
+from keras.layers.core import Dense, Dropout
+from keras.models import Sequential, load_model, save_model
 import tensorflow as tf
 from scipy.sparse.csr import csr_matrix
 import numpy as np
 
-class NeuralClassifier():
-    def neural_model_wine(X, y):
-        X = csr_matrix(X)
+def read_model(model, filename):
+    save_model(model, filename)
 
-        y = [int(i) for i in y]
+def write_model(filename):
+    return load_model(filename)
 
-        y_train_new = []
-
-        for i in y:
-            y_train_new.append(np.array([i]))
-
-        y_train_new = np.array(y_train_new)
-
-        y_train_new[y_train_new == 1] = 0
-        y_train_new[y_train_new == 2] = 1
-        y_train_new[y_train_new == 3] = 2
-
-        one_hot_labels = keras.utils.to_categorical(y_train_new, num_classes=3)
-
-        # tf.reset_default_graph()
-        sess = tf.InteractiveSession()
-
+class NeuralClassifier:
+    @staticmethod
+    def create_model(input_size, loss_name, num_classes):
         model = Sequential()
 
-        # model.add(Dense(4, input_dim=X[0].shape[1], kernel_initializer='normal', activation='relu'))
-        # model.add(Dense(24, kernel_initializer='normal', activation='sigmoid'))
-        # model.add(Dense(12, kernel_initializer='normal', activation='sigmoid'))
-        # model.add(Dense(3, kernel_initializer='normal', activation='sigmoid'))
-        #
-        # model.compile(optimizer='adam',
-        #               loss='categorical_crossentropy',
-        #               metrics=['accuracy'])
-
-        model.add(Dense(15, input_dim=X[0].shape[1], kernel_initializer='normal', activation='relu'))
+        model.add(Dense(15, input_dim=input_size, kernel_initializer='normal', activation='relu'))
         model.add(Dropout(0.2))
         model.add(Dense(10, kernel_initializer='normal', activation='relu'))
         model.add(Dropout(0.1))
-        # model.add(Dense(12, kernel_initializer='normal', activation='relu'))
-        # model.add(Dropout(0.1))
-        model.add(Dense(3, kernel_initializer='normal', activation='sigmoid'))
+        model.add(Dense(num_classes, kernel_initializer='normal', activation='sigmoid'))
 
         model.compile(optimizer='adam',
-                      loss='categorical_crossentropy',
+                      loss=loss_name,
                       metrics=['accuracy'])
-
-        print("start fit")
-        model.fit(X.todense(), one_hot_labels, epochs=30, batch_size=5)
 
         return model
 
+    def __init__(self, X, loss_name, num_classes):
+        self.model = NeuralClassifier.create_model(X[0].shape[1], loss_name, num_classes)
+
+def update_data(X, Y):
+    X = csr_matrix(X)
+
+    num_classes = len(set(Y))
+
+    start_num = min(list(set(Y)))
+    y_train_new = []
+
+    if start_num != 0:
+        for i in range(len(Y)):
+            Y[i] -= start_num
+
+    loss_name = 'categorical_crossentropy'
+
+    for i in Y:
+        y_train_new.append(np.array([i]))
+
+    y_train_new = np.array(y_train_new)
+
+    one_hot_labels = keras.utils.to_categorical(y_train_new, num_classes=num_classes)
+    Y = one_hot_labels
+
+    X = X.todense()
+    Y = np.array(Y)
+
+    return X, Y, loss_name, num_classes
 
 def train(X, Y):
-    Y_new = list(set(Y))
-    num_classes = len(Y_new)
-    start_num = min(Y_new)
+    X, Y, loss_name, num_classes = update_data(X, Y)
 
-    lr = RandomClassifier(num_classes, start_num)
-    lr.fit(X, Y)
+    sess = tf.InteractiveSession()
 
-    return lr
+    neural_net_class = NeuralClassifier(X, loss_name, num_classes)
+
+    neural_net_class.model.fit(X, Y, epochs=30, batch_size=5)
+
+    return neural_net_class.model
 
 
 def test(model, X, Y):
@@ -74,5 +78,12 @@ def test(model, X, Y):
 
 
 def classify(model, features_arr):
-    res_arr_class = [model.predict(i) for i in features_arr]
-    return res_arr_class, None
+    res_arr_proba = model.predict(features_arr)
+
+    res_arr_class = []
+
+    for i in res_arr_proba:
+        max_index = i.tolist().index(max(i))
+        res_arr_class.append(max_index)
+
+    return res_arr_class, res_arr_proba

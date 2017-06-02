@@ -80,6 +80,8 @@ def neural_model(X, y, retrain=True):
     # for i in y:
     #    y_train_new.append(np.array([i]))
 
+    y = [int(i) for i in y]
+
     y_train_new = np.array(y)
 
     # y_train_new[y_train_new == 1] = 0
