@@ -31,6 +31,7 @@ def serve_modal(path):
 
 @app.route('/data_upload/<project_id>', methods=['GET', 'POST'])
 def upload_data(project_id):
+    print ("upload file")
     if request.method == 'POST':
         task_type = request.form.get('task_type')
 
