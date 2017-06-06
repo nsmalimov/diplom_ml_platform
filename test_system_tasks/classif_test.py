@@ -4,8 +4,8 @@ from sklearn.metrics.classification import log_loss
 path = "/Users/Nurislam/Documents/ml_analysis_ws/files_for_test/"
 #path = "/Users/Nurislam/Documents/ml_analysis_ws/test/data/"
 
-#filename = "commonData.csv"
-filename = "wine.csv"
+filename = "commonData.csv"
+#filename = "wine.csv"
 
 def prepare_data():
     data = []
@@ -55,23 +55,50 @@ import ml_data.common_algorithms.classification.random_forest
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
-model = ml_data.common_algorithms.classification.random_forest.train(X_train, Y_train)
-print (model.score(X_test, Y_test))
+# model = ml_data.common_algorithms.classification.random_forest.train(X_train, Y_train)
+# print (model.score(X_test, Y_test))
+# import sklearn.metrics as m
+# pred_class, pred_proba = ml_data.common_algorithms.classification.random_forest.classify(model, X_test)
+# print (pred_class)
+# f1 = m.f1_score(Y_test, pred_class)
+# print("f1 " + str(f1))
+# precision = m.precision_score(Y_test, pred_class)
+# print("precision " + str(precision))
+# recall = m.recall_score(Y_test, pred_class)
+# print("recall " + str(recall))
 
-print (log_loss(model.predict_proba(X_test), Y_test))
+#print (log_loss(model.predict_proba(X_test), Y_test))
 
 # import ml_data.common_algorithms.classification.log_reg
 #
 # X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 # model1 = ml_data.common_algorithms.classification.log_reg.train(X_train, Y_train)
 # print (model1.score(X_test, Y_test))
-#
-# import ml_data.common_algorithms.classification.svm
-#
-# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
-# model2 = ml_data.common_algorithms.classification.svm.train(X_train, Y_train)
-# print (model2.score(X_test, Y_test))
-#
+# import sklearn.metrics as m
+# pred_class, pred_proba = ml_data.common_algorithms.classification.log_reg.classify(model1, X_test)
+# print (pred_class)
+# f1 = m.f1_score(Y_test, pred_class)
+# print("f1 " + str(f1))
+# precision = m.precision_score(Y_test, pred_class)
+# print("precision " + str(precision))
+# recall = m.recall_score(Y_test, pred_class)
+# print("recall " + str(recall))
+
+import ml_data.common_algorithms.classification.svm
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+model2 = ml_data.common_algorithms.classification.svm.train(X_train, Y_train)
+print (model2.score(X_test, Y_test))
+import sklearn.metrics as m
+pred_class, pred_proba = ml_data.common_algorithms.classification.svm.classify(model2, X_test)
+print (pred_class)
+f1 = m.f1_score(Y_test, pred_class)
+print("f1 " + str(f1))
+precision = m.precision_score(Y_test, pred_class)
+print("precision " + str(precision))
+recall = m.recall_score(Y_test, pred_class)
+print("recall " + str(recall))
+
 # import files_for_test.random_algorithm
 #
 # X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)

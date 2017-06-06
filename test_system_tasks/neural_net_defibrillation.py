@@ -301,18 +301,30 @@ def add_elements_rand(X, Y):
 
     return X, Y
 
-X, Y = read_wave_data()
+# X, Y = read_wave_data()
+#
+# X, Y = oversampling(X, Y)
+#
+# X, Y = add_elements_rand(X, Y)
+#
+# X_train, X_test, Y_train, Y_test = proportional_split_test_train(X, Y)
+#
+# model = neural_model(X_train, Y_train, True)
+#
+# model_neural_test(X_test, Y_test)
 
-X, Y = oversampling(X, Y)
+f = open("/Users/Nurislam/Documents/ml_analysis_ws/ml_data/project_1/data/commonData.csv", "r")
+num  = 0
+for i in f.readlines():
+    s = i.replace("\n", "")
+    #print (len(s.split(",")))
 
-X, Y = add_elements_rand(X, Y)
+    if (s.split(",")[-1]) == '1':
+        num += 1
 
-X_train, X_test, Y_train, Y_test = proportional_split_test_train(X, Y)
+print (num)
 
-model = neural_model(X_train, Y_train, True)
-
-model_neural_test(X_test, Y_test)
-
+f.close()
 # model = baseline_model()
 
 # from keras.utils import plot_model

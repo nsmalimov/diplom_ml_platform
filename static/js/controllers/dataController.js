@@ -101,7 +101,7 @@ myApp.controller("dataController", ['$scope', 'ModalService', '$http', function 
 
     $scope.showDescriptionModal = function () {
         ModalService.showModal({
-            templateUrl: "/static/partials/modals/dataDesc.html",
+            templateUrl: "/modals/dataDesc.html",
             controller: "modalController"
         }).then(function (modal) {
             modal.element.modal();

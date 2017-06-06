@@ -12,6 +12,7 @@ class Config(object):
     UPLOAD_FOLDER = '/files/'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     ALLOWED_EXTENSIONS = {'txt', 'csv'}
+    CACHE_TYPE = "null"
 
 
 class ProductionConfig(Config):

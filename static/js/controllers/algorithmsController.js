@@ -117,7 +117,7 @@ myApp.controller("algorithmsController", ['$scope', 'ModalService', '$http', fun
 
     $scope.showDescriptionModal = function () {
         ModalService.showModal({
-            templateUrl: $scope.selectedTaskType.name === "classification" ? "/static/partials/modals/algorithmClassifDesc.html" : "/static/partials/modals/algorithmClusterDesc.html",
+            templateUrl: $scope.selectedTaskType.name === "classification" ? "/modals/algorithmClassifDesc.html" : "/modals/algorithmClusterDesc.html",
             controller: "modalController"
         }).then(function (modal) {
             modal.element.modal();

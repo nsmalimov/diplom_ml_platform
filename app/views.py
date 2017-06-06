@@ -21,7 +21,12 @@ def hello_world():
 
 @app.route('/partials/<path:path>')
 def serve_partial(path):
-    return render_template('/partials/{}'.format(path))
+    return render_template("partials/" + path)
+
+
+@app.route('/modals/<path:path>')
+def serve_modal(path):
+    return render_template("modals/" + path)
 
 
 @app.route('/data_upload/<project_id>', methods=['GET', 'POST'])
