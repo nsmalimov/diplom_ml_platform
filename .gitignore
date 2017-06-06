@@ -76,3 +76,14 @@ fabric.properties
 .idea
 
 .DS_Store
+!/ml_data/common_algorithms/
+/ml_data/
+
+commands.txt
+diplom_text
+model.png
+temp
+todo
+test_system_tasks
+test
+files_for_test
