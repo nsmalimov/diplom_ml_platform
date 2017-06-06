@@ -76,8 +76,6 @@ fabric.properties
 .idea
 
 .DS_Store
-!/ml_data/common_algorithms/
-/ml_data/
 
 commands.txt
 diplom_text
