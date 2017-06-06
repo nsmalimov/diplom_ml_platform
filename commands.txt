@@ -1,9 +1,0 @@
-python 2
-
-pip install -r requirements.txt (sudo pip install -r requirements.txt)
-
-python 3
-
-sudo pip3 install -r requirements.txt
-
-https://github.com/damnever/pigar - gen requirements.txt
