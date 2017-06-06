@@ -25,7 +25,11 @@ myApp.controller("dataController", ['$scope', 'ModalService', '$http', function 
     };
 
     $scope.uploadFile = function () {
+        console.log("upload data");
+
         $scope.fd.append("task_type", $scope.selectedTaskType);
+
+        console.log(baseUrl + urlsList.data.upload_one + "/" + $scope.project_id);
 
         $http.post(baseUrl + urlsList.data.upload_one + "/" + $scope.project_id, $scope.fd, {
             withCredentials: true,
@@ -36,6 +40,7 @@ myApp.controller("dataController", ['$scope', 'ModalService', '$http', function 
                 document.getElementById('file-input').value = null;
             },
             function (response) {
+            console.log(response);
             });
     };
 
