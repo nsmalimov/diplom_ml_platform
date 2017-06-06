@@ -36,11 +36,12 @@ myApp.controller("dataController", ['$scope', 'ModalService', '$http', function 
             headers: {'Content-Type': undefined},
             transformRequest: angular.identity
         }).then(function (response) {
+                console.log(response);
                 $scope.loadAllDataByProjectId($scope.project_id);
                 document.getElementById('file-input').value = null;
             },
             function (response) {
-            console.log(response);
+                console.log(response);
             });
     };
 
