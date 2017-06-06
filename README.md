@@ -1,7 +1,7 @@
 ### diplom_ml_platform
 
-project adapted for Python 3
-necessary: sqlite
+<br>project adapted for Python 3</br>
+<br>necessary: sqlite</br>
 
 need ubuntu/linux/mac os
 
@@ -14,4 +14,3 @@ python run.py
 ```
 ### REMOTE
 see https://habrahabr.ru/post/267097/
-
