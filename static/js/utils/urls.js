@@ -1,4 +1,4 @@
-var baseUrl = window.location.hostname;
+var baseUrl = window.location.hostname + "/";
 
 var urlsList = {
     data: {
