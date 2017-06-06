@@ -2,12 +2,13 @@ import copy
 import random
 
 import numpy as np
-import sklearn
+import scipy
+import sklearn.metrics as m
+
 import tensorflow as tf
 from keras.layers import Dense, Dropout
 from keras.models import Sequential, save_model, load_model
 from scipy.sparse import csr_matrix
-from sklearn.cross_validation import train_test_split
 
 # fix random seed for reproducibility
 seed = 7
@@ -17,7 +18,7 @@ X, Y = [], []
 
 # f = open("/Users/Nurislam/PycharmProjects/diplom_project_2/data/concated/commonData.csv", "r")
 
-path1 = "/Users/Nurislam/Documents/ml_analysis_ws/test/data/"
+path1 = "/Users/Nurislam/Documents/ml_analysis_ws/files_for_test/"
 # path = "/home/nur/PycharmProjects/diplom_ml_platform/test/data/"
 
 path2 = "/Users/Nurislam/Documents/ml_analysis_ws/test_system_tasks/neural_model_def"
@@ -119,23 +120,34 @@ def neural_model(X, y, retrain=True):
 
 
 def oversampling(X, Y):
-    with_one = []
-    count_0 = 0
+    dict_count_each_class = {0: 0, 1: 0}
+
+    for i in Y:
+        dict_count_each_class[i] += 1
+
+    max_count = max(dict_count_each_class.values())
+
+    label_need = 0 if (list(dict_count_each_class.
+                            keys())[list(dict_count_each_class.values()).
+                       index(max_count)]) == 1 else 1
+
+    arr = []
+    count = 0
 
     for i in range(len(X)):
         label = Y[i]
-        if label == 1:
-            with_one.append(X[i])
+        if label == label_need:
+            arr.append(X[i])
         else:
-            count_0 += 1
+            count += 1
 
-    need_1 = count_0 - len(with_one)
+    need_1 = count - len(arr)
 
     for i in range(need_1):
-        r = random.randint(0, len(with_one) - 1)
-        choose_X = copy.deepcopy(with_one[r])
+        r = random.randint(0, len(arr) - 1)
+        choose_X = copy.deepcopy(arr[r])
         X.append(choose_X)
-        Y.append(1)
+        Y.append(label_need)
 
     return X, Y
 
@@ -199,13 +211,13 @@ def model_neural_test(X_test, Y_test):
         # max_index = i.tolist().index(max(i))
         res_arr.append(round(i[0]))
 
-    f1 = sklearn.metrics.f1_score(Y_test, res_arr)
+    f1 = m.f1_score(Y_test, res_arr)
     print("f1 " + str(f1))
 
-    precision = sklearn.metrics.precision_score(Y_test, res_arr)
+    precision = m.precision_score(Y_test, res_arr)
     print("precision " + str(precision))
 
-    recall = sklearn.metrics.recall_score(Y_test, res_arr)
+    recall = m.recall_score(Y_test, res_arr)
     print("recall " + str(recall))
 
     count_correct = 0
@@ -218,12 +230,82 @@ def model_neural_test(X_test, Y_test):
     print("mean score " + str(mean_score))
 
 
-#X, Y = oversampling(X, Y)
-#X, Y = undersampling(X, Y)
+def read_wave_data():
+    X, Y = [], []
 
-X, Y = expand_dataset(X, Y)
+    f = open(path1 + "lifepak_data", "r")
 
-#X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+    for i in f.readlines():
+        s = i.replace("\n", "")
+        s_split = s.split(",")
+        s_split = [float(j) for j in s_split]
+
+        X.append(s_split[:-1])
+        Y.append(s_split[-1])
+
+    f.close()
+
+    return X, Y
+
+
+# X, Y = oversampling(X, Y)
+# X, Y = undersampling(X, Y)
+
+# print (Y)
+# exit()
+# X, Y = expand_dataset(X, Y)
+
+# X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+
+def get_cosine_dist():
+    num = 0
+    for i in X:
+        if Y[num] != 0:
+            num += 1
+            continue
+        print("")
+        for j in X:
+            print(scipy.spatial.distance.cosine(i, j))
+
+        num += 1
+
+def add_elements_rand(X, Y):
+    dict_range_by_features_0 = {}
+    dict_range_by_features_1 = {}
+
+    for i in range(len(X)):
+        num = 0
+
+        if Y[i] == 0:
+            for j in X[i]:
+                if not(num in dict_range_by_features_0):
+                    dict_range_by_features_0[num] = [j, j]
+                else:
+                    if dict_range_by_features_0[num][0] > j:
+                        dict_range_by_features_0[num][0] = j
+
+                    if dict_range_by_features_0[num][1] < j:
+                        dict_range_by_features_0[num][1] = j
+                num += 1
+        else:
+            for j in X[i]:
+                if not(num in dict_range_by_features_1):
+                    dict_range_by_features_1[num] = [j, j]
+                else:
+                    if dict_range_by_features_1[num][0] > j:
+                        dict_range_by_features_1[num][0] = j
+
+                    if dict_range_by_features_1[num][1] < j:
+                        dict_range_by_features_1[num][1] = j
+                num += 1
+
+    return X, Y
+
+X, Y = read_wave_data()
+
+X, Y = oversampling(X, Y)
+
+X, Y = add_elements_rand(X, Y)
 
 X_train, X_test, Y_train, Y_test = proportional_split_test_train(X, Y)
 
