@@ -29,7 +29,10 @@ def get_predetermined_metrics_classif(y_real_label, y_class_predict, y_proba_pre
         need_type = predetermined_metrics_dict_classif[i][1]
         func = predetermined_metrics_dict_classif[i][0]
         if need_type == "proba" and not(y_proba_predict is None):
-            metrics[i] = func(y_real_label, y_class_predict)
+            try:
+                metrics[i] = func(y_real_label, y_class_predict)
+            except:
+                pass
         if need_type == "class":
             metrics[i] = func(y_real_label, y_class_predict)
 
