@@ -222,7 +222,7 @@ function $RouteProvider() {
    *      or `$location.hash()` changes.
    *
    *      If the option is set to `false` and url in the browser changes, then
-   *      `$routeUpdate` event is broadcasted on the root scope.
+   *      `$routeUpdate` event is broadcasted on the root.crt scope.
    *
    *    - `[caseInsensitiveMatch=false]` - `{boolean=}` - match routes without being case sensitive
    *
@@ -525,7 +525,7 @@ function $RouteProvider() {
     /**
      * @ngdoc event
      * @name $route#$routeChangeStart
-     * @eventType broadcast on root scope
+     * @eventType broadcast on root.crt scope
      * @description
      * Broadcasted before a route change. At this  point the route services starts
      * resolving all of the dependencies needed for the route change to occur.
@@ -545,7 +545,7 @@ function $RouteProvider() {
     /**
      * @ngdoc event
      * @name $route#$routeChangeSuccess
-     * @eventType broadcast on root scope
+     * @eventType broadcast on root.crt scope
      * @description
      * Broadcasted after a route change has happened successfully.
      * The `resolve` dependencies are now available in the `current.locals` property.
@@ -562,7 +562,7 @@ function $RouteProvider() {
     /**
      * @ngdoc event
      * @name $route#$routeChangeError
-     * @eventType broadcast on root scope
+     * @eventType broadcast on root.crt scope
      * @description
      * Broadcasted if a redirection function fails or any redirection or resolve promises are
      * rejected.
@@ -577,7 +577,7 @@ function $RouteProvider() {
     /**
      * @ngdoc event
      * @name $route#$routeUpdate
-     * @eventType broadcast on root scope
+     * @eventType broadcast on root.crt scope
      * @description
      * The `reloadOnSearch` property has been set to false, and we are reusing the same
      * instance of the Controller.

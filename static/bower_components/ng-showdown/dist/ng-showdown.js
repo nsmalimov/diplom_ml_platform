@@ -9,7 +9,7 @@
     // like Node.
     module.exports = factory(require('angular'), require('showdown'));
   } else {
-    // Browser globals (root is window)
+    // Browser globals (root.crt is window)
     root.ngShowdown = factory(root.angular, root.showdown);
   }
 }(this, function (angular, showdown) {

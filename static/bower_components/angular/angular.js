@@ -1862,7 +1862,7 @@ function angularInit(element, bootstrap) {
  * </html>
  * ```
  *
- * @param {DOMElement} element DOM element which is the root of angular application.
+ * @param {DOMElement} element DOM element which is the root.crt of angular application.
  * @param {Array<String|Function|Array>=} modules an array of modules to load into the application.
  *     Each item in the array should be the name of a predefined module or a (DI annotated)
  *     function that will be invoked by the injector as a `config` block.
@@ -1964,7 +1964,7 @@ function reloadWithDebugInfo() {
  * @description
  * Get the testability service for the instance of Angular on the given
  * element.
- * @param {DOMElement} element DOM element which is the root of angular application.
+ * @param {DOMElement} element DOM element which is the root.crt of angular application.
  */
 function getTestability(rootElement) {
   var injector = angular.element(rootElement).injector();
@@ -7019,7 +7019,7 @@ function $TemplateCacheProvider() {
  * - "linkFn" - linking fn of a single directive
  * - "nodeLinkFn" - function that aggregates all linking fns for a particular node
  * - "childLinkFn" -  function that aggregates all linking fns for child nodes of a particular node
- * - "compositeLinkFn" - function that aggregates all linking fns for a compilation root (nodeList)
+ * - "compositeLinkFn" - function that aggregates all linking fns for a compilation root.crt (nodeList)
  */
 
 
@@ -8938,8 +8938,8 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
      * @param {NodeList} nodeList an array of nodes or NodeList to compile
      * @param {function(angular.Scope, cloneAttachFn=)} transcludeFn A linking function, where the
      *        scope argument is auto-generated to the new child of the transcluded parent scope.
-     * @param {DOMElement=} $rootElement If the nodeList is the root of the compilation tree then
-     *        the rootElement must be set the jqLite collection of the compile root. This is
+     * @param {DOMElement=} $rootElement If the nodeList is the root.crt of the compilation tree then
+     *        the rootElement must be set the jqLite collection of the compile root.crt. This is
      *        needed so that the jqLite collection items can be replaced with widgets.
      * @param {number=} maxPriority Max directive priority.
      * @returns {Function} A composite linking function of all of the matched directives or null.
@@ -9317,8 +9317,8 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
      * @param {function(angular.Scope, cloneAttachFn=)} transcludeFn A linking function, where the
      *                                                  scope argument is auto-generated to the new
      *                                                  child of the transcluded parent scope.
-     * @param {JQLite} jqCollection If we are working on the root of the compile tree then this
-     *                              argument has the root jqLite array so that we can replace nodes
+     * @param {JQLite} jqCollection If we are working on the root.crt of the compile tree then this
+     *                              argument has the root.crt jqLite array so that we can replace nodes
      *                              on it.
      * @param {Object=} originalReplaceDirective An optional directive that will be ignored when
      *                                           compiling the transclusion.
@@ -9556,7 +9556,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
 
             if ($template.length !== 1 || compileNode.nodeType !== NODE_TYPE_ELEMENT) {
               throw $compileMinErr('tplrt',
-                  'Template for directive \'{0}\' must have exactly one root element. {1}',
+                  'Template for directive \'{0}\' must have exactly one root.crt element. {1}',
                   directiveName, '');
             }
 
@@ -9937,7 +9937,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
     // or child scope created. For instance:
     // * if the directive has been pulled into a template because another directive with a higher priority
     // asked for element transclusion
-    // * if the directive itself asks for transclusion but it is at the root of a template and the original
+    // * if the directive itself asks for transclusion but it is at the root.crt of a template and the original
     // element was replaced. See https://github.com/angular/angular.js/issues/12936
     function markDirectiveScope(directives, isolateScope, newScope) {
       for (var j = 0, jj = directives.length; j < jj; j++) {
@@ -10085,7 +10085,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
 
             if ($template.length !== 1 || compileNode.nodeType !== NODE_TYPE_ELEMENT) {
               throw $compileMinErr('tplrt',
-                  'Template for directive \'{0}\' must have exactly one root element. {1}',
+                  'Template for directive \'{0}\' must have exactly one root.crt element. {1}',
                   origAsyncDirective.name, templateUrl);
             }
 
@@ -10207,7 +10207,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
             var templateNodeParent = templateNode.parent(),
                 hasCompileParent = !!templateNodeParent.length;
 
-            // When transcluding a template that has bindings in the root
+            // When transcluding a template that has bindings in the root.crt
             // we don't have a parent and thus need to add the class during linking fn.
             if (hasCompileParent) compile.$$addBindingClass(templateNodeParent);
 
@@ -10335,8 +10335,8 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
      * This is a special jqLite.replaceWith, which can replace items which
      * have no parents, provided that the containing jqLite collection is provided.
      *
-     * @param {JqLite=} $rootElement The root of the compile tree. Used so that we can replace nodes
-     *                               in the root of the tree.
+     * @param {JqLite=} $rootElement The root.crt of the compile tree. Used so that we can replace nodes
+     *                               in the root.crt of the tree.
      * @param {JqLite} elementsToRemove The jqLite element which we are going to replace. We keep
      *                                  the shell, but replace its DOM node reference.
      * @param {Node} newNode The new DOM node.
@@ -14125,7 +14125,7 @@ function $LocationProvider() {
   /**
    * @ngdoc event
    * @name $location#$locationChangeStart
-   * @eventType broadcast on root scope
+   * @eventType broadcast on root.crt scope
    * @description
    * Broadcasted before a URL will change.
    *
@@ -14147,7 +14147,7 @@ function $LocationProvider() {
   /**
    * @ngdoc event
    * @name $location#$locationChangeSuccess
-   * @eventType broadcast on root scope
+   * @eventType broadcast on root.crt scope
    * @description
    * Broadcasted after a URL was changed.
    *
@@ -14219,7 +14219,7 @@ function $LocationProvider() {
 
       // traverse the DOM up to find first A tag
       while (nodeName_(elm[0]) !== 'a') {
-        // ignore rewriting if no A tag (reached root element, or no parent - removed from document)
+        // ignore rewriting if no A tag (reached root.crt element, or no parent - removed from document)
         if (elm[0] === $rootElement[0] || !(elm = elm.parent())[0]) return;
       }
 
@@ -17250,8 +17250,8 @@ function $$RAFProvider() { //rAF
  *
  * @description
  *
- * Every application has a single root {@link ng.$rootScope.Scope scope}.
- * All other scopes are descendant scopes of the root scope. Scopes provide separation
+ * Every application has a single root.crt {@link ng.$rootScope.Scope scope}.
+ * All other scopes are descendant scopes of the root.crt scope. Scopes provide separation
  * between the model and the view, via a mechanism for watching the model for changes.
  * They also provide event emission/broadcast and subscription facility. See the
  * {@link guide/scope developer guide on scopes}.
@@ -17323,7 +17323,7 @@ function $RootScopeProvider() {
      * @name $rootScope.Scope
      *
      * @description
-     * A root scope can be retrieved using the {@link ng.$rootScope $rootScope} key from the
+     * A root.crt scope can be retrieved using the {@link ng.$rootScope $rootScope} key from the
      * {@link auto.$injector $injector}. Child scopes are created using the
      * {@link ng.$rootScope.Scope#$new $new()} method. (Most scopes are created automatically when
      * compiled HTML template is executed.) See also the {@link guide/scope Scopes guide} for
@@ -17392,7 +17392,7 @@ function $RootScopeProvider() {
        * @name $rootScope.Scope#$root
        *
        * @description
-       * Reference to the root scope.
+       * Reference to the root.crt scope.
        */
 
     Scope.prototype = {
@@ -17960,7 +17960,7 @@ function $RootScopeProvider() {
         $browser.$$checkUrlChange();
 
         if (this === $rootScope && applyAsyncId !== null) {
-          // If this is the root scope, and $applyAsync has scheduled a deferred $apply(), then
+          // If this is the root.crt scope, and $applyAsync has scheduled a deferred $apply(), then
           // cancel the scheduled $apply and flush the queue of expressions to be evaluated.
           $browser.defer.cancel(applyAsyncId);
           flushApplyAsync();
@@ -18242,7 +18242,7 @@ function $RootScopeProvider() {
              } catch (e) {
                $exceptionHandler(e);
              } finally {
-               $root.$digest();
+               $root.crt.$digest();
              }
            }
        * ```
@@ -18380,7 +18380,7 @@ function $RootScopeProvider() {
        *
        * The event life cycle starts at the scope on which `$emit` was called. All
        * {@link ng.$rootScope.Scope#$on listeners} listening for `name` event on this scope get
-       * notified. Afterwards, the event traverses upwards toward the root scope and calls all
+       * notified. Afterwards, the event traverses upwards toward the root.crt scope and calls all
        * registered listeners along the way. The event will stop propagating if one of the listeners
        * cancels it.
        *
@@ -18481,7 +18481,7 @@ function $RootScopeProvider() {
         var listenerArgs = concat([event], arguments, 1),
             listeners, i, length;
 
-        //down while you can, then up and next sibling or up and next sibling until back at root
+        //down while you can, then up and next sibling or up and next sibling until back at root.crt
         while ((current = next)) {
           event.currentScope = current;
           listeners = current.$$listeners[name] || [];
@@ -18590,9 +18590,9 @@ function $RootScopeProvider() {
  * @name $rootElement
  *
  * @description
- * The root element of Angular application. This is either the element where {@link
+ * The root.crt element of Angular application. This is either the element where {@link
  * ng.directive:ngApp ngApp} was declared or the element passed into
- * {@link angular.bootstrap}. The element represents the root element of application. It is also the
+ * {@link angular.bootstrap}. The element represents the root.crt element of application. It is also the
  * location where the application's {@link auto.$injector $injector} service gets
  * published, and can be retrieved using `$rootElement.injector()`.
  */
@@ -19969,7 +19969,7 @@ function $$TestabilityProvider() {
      * Returns an array of elements that are bound (via ng-bind or {{}})
      * to expressions matching the input.
      *
-     * @param {Element} element The element root to search from.
+     * @param {Element} element The element root.crt to search from.
      * @param {string} expression The binding expression to match.
      * @param {boolean} opt_exactMatch If true, only returns exact matches
      *     for the expression. Filters and whitespace are ignored.
@@ -20004,7 +20004,7 @@ function $$TestabilityProvider() {
      * Returns an array of elements that are two-way found via ng-model to
      * expressions matching the input.
      *
-     * @param {Element} element The element root to search from.
+     * @param {Element} element The element root.crt to search from.
      * @param {string} expression The model expression to match.
      * @param {boolean} opt_exactMatch If true, only returns exact matches
      *     for the expression.
@@ -30208,7 +30208,7 @@ var ngOptionsDirective = ['$compile', '$document', '$parse', function($compile, 
 
         } else {
           // remove the class, which is added automatically because we recompile the element and it
-          // becomes the compilation root
+          // becomes the compilation root.crt
           selectCtrl.emptyOption.removeClass('ng-scope');
         }
 
@@ -32812,7 +32812,7 @@ var optionDirective = ['$interpolate', function($interpolate) {
 
       return function(scope, element, attr) {
         // This is an optimization over using ^^ since we don't want to have to search
-        // all the way to the root of the DOM for every single option element
+        // all the way to the root.crt of the DOM for every single option element
         var selectCtrlName = '$selectController',
             parent = element.parent(),
             selectCtrl = parent.data(selectCtrlName) ||

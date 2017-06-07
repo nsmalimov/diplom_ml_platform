@@ -108,13 +108,12 @@ myApp.controller("analysClassifController", function ($scope, $http) {
                     $scope.res = dataProcessingResult["res"];
                     if ("classification" in $scope.res){
                         $scope.bestClassif = $scope.res.classification.best;
+                        delete $scope.res.classification.best;
                     }
                     if ("clustering" in $scope.res) {
                         $scope.bestCluster = $scope.res.clustering.best;
+                        delete $scope.res.clustering.best;
                     }
-
-                    delete $scope.res.clustering.best;
-                    delete $scope.res.classification.best;
                     break;
                 default:
                     break;

@@ -2815,7 +2815,7 @@ var $$AnimateQueueProvider = ['$animateProvider', /** @this */ function($animate
         }
 
         if (bodyNodeDetected && rootNodeDetected) {
-          // If both body and root have been found, any other checks are pointless,
+          // If both body and root.crt have been found, any other checks are pointless,
           // as no animation data should live outside the application
           break;
         }
