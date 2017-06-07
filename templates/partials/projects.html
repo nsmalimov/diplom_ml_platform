@@ -24,7 +24,7 @@
                         <div class="list-group">
                             <a href="" ng-repeat="item in allProjects" ng-click="toggle(item)" class="list-group-item">
                                 <span class="badge">></span>
-                                <div>[[item.title]]</div>
+                                <div>||item.title||</div>
                             </a>
                         </div>
                     </div>
@@ -36,9 +36,9 @@
         <div pageslide ps-open="checked" style="margin-top: 40px">
             <div style="padding:20px" id="demo-right">
                 <div class="row voffset">
-                    <p>[[selectedItem.title]]</p>
-                    <p>[[selectedItem.description]]</p>
-                    <p>[[selectedItem.modified_at | date:'medium']]</p>
+                    <p>||selectedItem.title||</p>
+                    <p>||selectedItem.description||</p>
+                    <p>||selectedItem.modified_at | date:'medium'||</p>
                 </div>
                 <div class="row voffset">
                     <button type="button" class="btn btn-default"

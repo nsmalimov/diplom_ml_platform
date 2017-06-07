@@ -75,13 +75,13 @@
                                    ctrl.selectedObjects.selectedResultType=null;
                                    changeColor('styleProject')">
                             <ui-select-match placeholder="Select a project">
-                                [[$select.selected.title]]
+                                ||$select.selected.title||
                             </ui-select-match>
                             <ui-select-choices
                                     repeat="item in allProjects | propsFilter: {title: $select.search, description: $select.search}">
                                 <div ng-bind-html="item.title | highlight: $select.search"></div>
                                 <small>
-                                    title: [[item.title]]
+                                    title: ||item.title||
                                     description: <span ng-bind-html="''+item.title | highlight: $select.search"></span>
                                 </small>
                             </ui-select-choices>
@@ -98,13 +98,13 @@
                                    ctrl.selectedObjects.selectedResultType=null;
                                    changeColor('styleRecord')">
                             <ui-select-match placeholder="Select a record">
-                                [[$select.selected.filename]]
+                                ||$select.selected.filename||
                             </ui-select-match>
                             <ui-select-choices
                                     repeat="item in allRecordsByProjectId | propsFilter: {filename: $select.search}">
                                 <div ng-bind-html="item.title | highlight: $select.search"></div>
                                 <small>
-                                    filename: [[item.filename]]
+                                    filename: ||item.filename||
                                 </small>
                             </ui-select-choices>
                         </ui-select>
@@ -131,13 +131,13 @@
                                     changeColor('styleAlgorithms');
                                     loadAllResultTypes(false)">
                                 <ui-select-match placeholder="Select a algorithm">
-                                    [[$select.selected.title]]
+                                    ||$select.selected.title||
                                 </ui-select-match>
                                 <ui-select-choices
                                         repeat="item in algorithmsByProjectAndCommon | propsFilter: {title: $select.search, description: $select.search}">
                                     <div ng-bind-html="item.title | highlight: $select.search"></div>
                                     <small>
-                                        title: [[item.title]]
+                                        title: ||item.title||
                                         description: <span
                                             ng-bind-html="''+item.title | highlight: $select.search"></span>
                                     </small>
@@ -153,13 +153,13 @@
                                    style="min-width: 300px;"
                                    title="Выберите результат" ng-change="changeColor('styleResultType')">
                             <ui-select-match placeholder="Select a result type">
-                                [[$select.selected.title]]
+                                ||$select.selected.title||
                             </ui-select-match>
                             <ui-select-choices
                                     repeat="item in resultTypes | propsFilter: {title: $select.search, name: $select.search}">
                                 <div ng-bind-html="item.title | highlight: $select.search"></div>
                                 <small>
-                                    title: [[item.title]]
+                                    title: ||item.title||
                                     name: <span ng-bind-html="''+item.name | highlight: $select.search"></span>
                                 </small>
                             </ui-select-choices>
@@ -175,27 +175,28 @@
                         <div class="row voffset">
                             <p>Метрики</p>
                             <div ng-repeat="(key, value) in metrics">
-                                <p>[[key]]: [[value]]</p>
+                                <p>||key||: ||value||</p>
                             </div>
                         </div>
                         <div class="row voffset">
                             <p>Графики</p>
                             <div ng-repeat="(key, value) in img">
-                                <p>[[key]]</p>
-                                <img ng-src="[[value]]" class="img-responsive">
+                                <p>||key||</p>
+                                <img ng-src="||value||" class="img-responsive">
                             </div>
                         </div>
                     </div>
                     <div class="row voffset">
                         <div ng-if="type=='automaticle_best_model'">
                             <ul ng-repeat="(key0, val0) in res">
-                                <p>[[key0]]</p>
+                                <p>||key0||</p>
                                 <li ng-repeat="(key1, val1) in val0">
+
                                     <p style="color: red"
                                        ng-if="key1==bestClassif || key1==bestCluster && key1!='best'">
-                                        [[ key1 ]]: [[ val1 ]]</p>
+                                        || key1 ||: || val1 ||</p>
                                     <p ng-if="key1!=bestClassif && key1!=bestCluster && key1!='best'">
-                                        [[ key1 ]]: [[ val1 ]]</p>
+                                        || key1 ||: || val1 ||</p>
                                 </li>
                             </ul>
                         </div>

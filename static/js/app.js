@@ -1,4 +1,6 @@
-var myApp = angular.module('myApp', ['ng.bs.dropdown', 'pageslide-directive', 'ngSanitize', 'ng-showdown', 'ui.bootstrap', 'ngRoute', 'ui.select', 'angularModalService', 'ngAnimate']).config(function ($routeProvider, $locationProvider) {
+var myApp = angular.module('myApp', ['ng.bs.dropdown', 'pageslide-directive', 'ngSanitize',
+    'ng-showdown', 'ui.bootstrap', 'ngRoute', 'ui.select',
+    'angularModalService', 'ngAnimate']).config(function ($routeProvider, $locationProvider) {
     $routeProvider.when('/',
         {
             templateUrl: '/partials/main.html'
@@ -12,17 +14,29 @@ var myApp = angular.module('myApp', ['ng.bs.dropdown', 'pageslide-directive', 'n
     $routeProvider.when('/analysclassif',
         {
             templateUrl: '/partials/analysClassif.html',
-            controller:'analysClassifController'
+            controller: 'analysClassifController'
         });
     $routeProvider.when('/data',
         {
             templateUrl: '/partials/data.html',
-            controller:'dataController'
+            controller: 'dataController'
         });
     $routeProvider.when('/algorithms',
         {
             templateUrl: '/partials/algorithms.html',
-            controller:'algorithmsController'
+            controller: 'algorithmsController'
         });
     $locationProvider.hashPrefix('');
-});
+})
+    .service('dataService', function () {
+        var languageName = null;
+
+        return {
+            getProperty: function () {
+                return languageName;
+            },
+            setProperty: function (value) {
+                languageName = value;
+            }
+        };
+    });

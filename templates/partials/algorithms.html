@@ -9,13 +9,13 @@
                 <ui-select ng-model="ctrl.selectedTaskType" theme="select2" style="min-width: 300px;"
                            title="Выберите тип задачи" ng-change="taskTypeChange(ctrl.selectedTaskType)">
                     <ui-select-match placeholder="Select a task type">
-                        [[$select.selected.title]]
+                        ||$select.selected.title||
                     </ui-select-match>
                     <ui-select-choices
                             repeat="item in allTaskTypes | propsFilter: {title: $select.search}">
                         <div ng-bind-html="item.title | highlight: $select.search"></div>
                         <small>
-                            [[item.name]]
+                            ||item.name||
                         </small>
                     </ui-select-choices>
                 </ui-select>
@@ -27,15 +27,15 @@
             </div>
             <div class="row voffset">
                 <button type="button" class="btn btn-default" ng-click="showCommonAlgorithms()">
-                    [[strButtonCheckCommonAlgorithmsFlag]]
+                    ||strButtonCheckCommonAlgorithmsFlag||
                 </button>
             </div>
 
             <div ng-if="commonAlgorithmsFlag">
                 <div class="row voffset">
                     <div ng-repeat="item in commonAlgorithms">
-                        <div>[[item.title]]</div>
-                        <div>[[item.description]]</div>
+                        <div>||item.title||</div>
+                        <div>||item.description||</div>
                         <br>
                     </div>
                 </div>
@@ -46,13 +46,13 @@
                     <ui-select ng-model="ctrl.selectedProject" theme="select2" style="min-width: 300px;"
                                title="Выберите проект" ng-change="onSelectUiClick(ctrl.selectedProject.id)">
                         <ui-select-match placeholder="Select a project">
-                            [[$select.selected.title]]
+                            ||$select.selected.title||
                         </ui-select-match>
                         <ui-select-choices
                                 repeat="item in allProjects | propsFilter: {title: $select.search, description: $select.search}">
                             <div ng-bind-html="item.title | highlight: $select.search"></div>
                             <small>
-                                title: [[item.title]]
+                                title: ||item.title||
                                 description: <span ng-bind-html="''+item.title | highlight: $select.search"></span>
                             </small>
                         </ui-select-choices>
@@ -94,8 +94,8 @@
                                             <img
                                                     src="/image/algorithm_image_icon.jpeg"
                                                     class="img-responsive">
-                                            <h2 style="text-align: center">[[item.title]]</h2>
-                                            <p style="text-align: center">[[item.description]]</p>
+                                            <h2 style="text-align: center">||item.title||</h2>
+                                            <p style="text-align: center">||item.description||</p>
                                             <div style="text-align:center;">
                                                 <a class="btn btn-primary col-centered" ng-click="toggle(item)">Подробнее</a>
                                             </div>
@@ -107,10 +107,10 @@
                                         <div pageslide ps-open="checked == true" style="margin-top: 40px">
                                             <div style="padding:20px" id="demo-right">
                                                 <div class="row voffset">
-                                                    <p>[[selectedItem.title]]</p>
-                                                    <p>[[selectedItem.description]]</p>
-                                                    <p>Filepath: [[selectedItem.filename]]</p>
-                                                    <p>Preloaded: [[selectedItem.preloaded]]</p>
+                                                    <p>||selectedItem.title||</p>
+                                                    <p>||selectedItem.description||</p>
+                                                    <p>Filepath: ||selectedItem.filename||</p>
+                                                    <p>Preloaded: ||selectedItem.preloaded||</p>
                                                 </div>
                                                 <div class="row voffset" ng-if="!selectedItem.preloaded">
                                                     <button type="button" class="btn btn-default"
@@ -120,8 +120,8 @@
                                                 </div>
                                                 <div class="row voffset" ng-if="!selectedItem.preloaded">
                                                     <a target="_self"
-                                                       href="/object/[[selectedItem.project_id]]/algorithms/[[selectedItem.filename]]"
-                                                       download="[[selectedItem.filename]]" class="btn btn-info"
+                                                       href="/object/||selectedItem.project_id||/algorithms/||selectedItem.filename||"
+                                                       download="||selectedItem.filename||" class="btn btn-info"
                                                        role="button">Скачать</a>
                                                 </div>
                                                 <div class="row voffset">
