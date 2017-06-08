@@ -1,5 +1,3 @@
-### diplom_ml_platform
-
 <br>project adapted for Python 3</br>
 <br>necessary: sqlite</br>
 
