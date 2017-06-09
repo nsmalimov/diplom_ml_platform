@@ -6,8 +6,5 @@ myApp.controller("languageController", ['$scope', 'ModalService', '$http', 'data
         ];
 
     $scope.selectedLanguage = $scope.allLanguages[0];
-
-
-
     dataService.setProperty($scope.selectedLanguage.name);
 }]);
