@@ -11,4 +11,4 @@ pip3 install requirements.txt
 python run.py
 ```
 ### REMOTE
-see https://habrahabr.ru/post/267097/
+https://habrahabr.ru/post/267097/
